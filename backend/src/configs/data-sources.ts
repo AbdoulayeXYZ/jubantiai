@@ -17,7 +17,7 @@ export const AppDataSource = new DataSource({
   username: process.env.DB_USERNAME,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
-  entities: [__dirname + '/../entities/*.{ts,js}'],
+  entities: [__dirname + '/../entities/*.entity.{ts,js}'],
   synchronize: true, 
   logging: true,
   connectTimeout: 30000, // Augmente le timeout de connexion
