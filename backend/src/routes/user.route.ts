@@ -1,6 +1,6 @@
 import express, { Request, Response } from 'express';
+import { registerUser, authenticateUser } from '../services/user.service';
 const router = express.Router();
-const userService = require('../services/user.service');
 
 // Route d'enregistrement d'utilisateur
 router.post('/register', async (req: Request, res: Response) => {
@@ -10,7 +10,7 @@ router.post('/register', async (req: Request, res: Response) => {
     }
 
     try {
-        const newUser = await userService.registerUser(req.body);
+        const newUser = await registerUser(req.body);
         res.status(201).json({ message: 'User registered successfully', user: newUser });
 
     } catch (error: unknown) {
@@ -22,7 +22,7 @@ router.post('/register', async (req: Request, res: Response) => {
 router.post('/login', async (req: Request, res: Response) => {
     try {
         const { email, password } = req.body;
-        const { user, token } = await userService.authenticateUser(email, password);
+        const { user, token } = await authenticateUser(email, password);
         res.status(200).json({ user, token });
     } catch (error: unknown) {
         res.status(401).json({ error: 'Login failed: ' + (error as Error).message });

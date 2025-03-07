@@ -20,8 +20,8 @@ class UserController {
     async login(req: Request, res: Response) {
         try {
             const { email, password } = req.body;
-            const token = await authenticateUser(email, password); // Use named import
-            return res.status(200).json({ token });
+            const { user, token } = await authenticateUser(email, password);
+            return res.status(200).json({ user, token });
         } catch (error) {
             return res.status(401).json({ message: 'Invalid credentials', error });
         }
