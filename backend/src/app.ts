@@ -6,8 +6,7 @@ import bodyParser from 'body-parser';
 import { Request, Response } from 'express';
 import cors from 'cors';
 import userRoutes from './routes/user.route';
-
-
+import examRoutes from './routes/exam.route';
 
 // Configuration de l'environnement
 dotenv.config();
@@ -26,32 +25,28 @@ app.use(cors({
   credentials: true
 }));
 
-// Basics routes for testing
-app.get('/', (req: Request, res: Response) => {
-    res.send('Hello from Express server!');
-});
-
-// Routes
-app.use('/api/users', userRoutes);
-
-// Démarrage du serveur après la connexion à la base de données
+// Initialize database connection and start server
 const startServer = async () => {
   try {
-    // Démarrage du serveur Express d'abord
-    const server = app.listen(PORT, () => {
-      console.log(`Express server running on http://localhost:${PORT}`);
+    // Initialize database connection first
+    await AppDataSource.initialize();
+    console.log('Database connected successfully');
+
+    // Only set up routes after database is connected
+    app.get('/', (req: Request, res: Response) => {
+        res.send('Hello from Express server!');
     });
 
-    // Puis tentative de connexion à la base de données
-    try {
-      await AppDataSource.initialize();
-      console.log('Database connected successfully');
-    } catch (dbError) {
-      console.error('Database connection failed:', dbError);
-      // Le serveur continue de fonctionner même si la BD ne se connecte pas
-    }
+    // Routes
+    app.use('/api/users', userRoutes);
+    app.use('/api/exams', examRoutes);
+
+    // Then start Express server
+    app.listen(PORT, () => {
+      console.log(`Express server running on http://localhost:${PORT}`);
+    });
   } catch (error) {
-    console.error('Server failed to start:', error);
+    console.error('Error during startup:', error);
     process.exit(1);
   }
 };

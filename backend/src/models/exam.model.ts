@@ -1,11 +1,11 @@
-import { getRepository } from 'typeorm';
+import { AppDataSource } from '../configs/data-sources';
 import { Exam } from '../entities/exam.entity';
 import { ICreateExamDto, IUpdateExamDto } from '../interfaces/exam.interface';
 import fs from 'fs';
 import path from 'path';
 
 export class ExamModel {
-    private examRepository = getRepository(Exam);
+    private examRepository = AppDataSource.getRepository(Exam);
 
     async createExam(teacherId: number, examData: ICreateExamDto, subjectFile: Express.Multer.File): Promise<Exam> {
         const subjectPath = subjectFile.path;

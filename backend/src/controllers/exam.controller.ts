@@ -1,3 +1,5 @@
+/// <reference path="../types/express.d.ts" />
+
 import { Request, Response } from 'express';
 import { ExamService } from '../services/exam.service';
 import { ICreateExamDto, IUpdateExamDto } from '../interfaces/exam.interface';

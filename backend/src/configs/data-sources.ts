@@ -1,24 +1,31 @@
 import { DataSource } from 'typeorm';
-import dotenv from 'dotenv';
+import * as dotenv from 'dotenv';
+import { User } from '../entities/user.entity';
+import { Exam } from '../entities/exam.entity';
+import { Submission } from '../entities/submission.entity';
 
 dotenv.config();
 
-console.log('Database configuration:', {
-  host: process.env.DB_HOST,
-  port: process.env.DB_PORT,
-  username: process.env.DB_USERNAME,
-  database: process.env.DB_NAME,
-});
+const dbConfig = {
+    host: process.env.DB_HOST || 'localhost',
+    port: process.env.DB_PORT || '3306',
+    username: process.env.DB_USERNAME || 'root',
+    password: process.env.DB_PASSWORD || '',
+    database: process.env.DB_NAME || 'jubantiai_db'
+};
+
+console.log('Database configuration:', dbConfig);
 
 export const AppDataSource = new DataSource({
-  type: 'mysql',
-  host: process.env.DB_HOST,
-  port: parseInt(process.env.DB_PORT || '3306', 10),
-  username: process.env.DB_USERNAME,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME,
-  entities: [__dirname + '/../entities/*.entity.{ts,js}'],
-  synchronize: true, 
-  logging: true,
-  connectTimeout: 30000, // Augmente le timeout de connexion
+    type: 'mysql',
+    host: dbConfig.host,
+    port: parseInt(dbConfig.port),
+    username: dbConfig.username,
+    password: dbConfig.password,
+    database: dbConfig.database,
+    synchronize: true, // Be careful with this in production
+    logging: true,
+    entities: [User, Exam, Submission],
+    subscribers: [],
+    migrations: [],
 });
