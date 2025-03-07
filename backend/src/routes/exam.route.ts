@@ -5,7 +5,7 @@ import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
 
-// Configure storage for exam subjects
+// Configure storage for exam files
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         const uploadDir = path.join(__dirname, '../../uploads/exams');
@@ -25,7 +25,7 @@ const storage = multer.diskStorage({
 });
 
 const fileFilter = (req: Express.Request, file: Express.Multer.File, cb: multer.FileFilterCallback) => {
-    // Accept only PDF files
+    // Accept PDF files
     if (file.mimetype === 'application/pdf') {
         cb(null, true);
     } else {
@@ -48,7 +48,10 @@ const examController = new ExamController();
 router.use(authMiddleware);
 
 // Create a new exam (teacher only, requires file upload)
-router.post('/', upload.single('subject'), examController.createExam);
+router.post('/', upload.single('subjectFile'), examController.createExam);
+
+// Update correction template
+router.post('/:id/correction-template', upload.single('templateFile'), examController.updateCorrectionTemplate);
 
 // Get all exams (for teacher: their exams, for student: published exams)
 router.get('/', examController.getExams);

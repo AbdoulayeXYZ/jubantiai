@@ -137,4 +137,14 @@ export class ExamService {
             filename: `${exam.title}_correction_template.pdf`
         };
     }
+
+    async updateCorrectionTemplate(examId: number, teacherId: number, templateFile: Express.Multer.File): Promise<Exam | null> {
+        const exam = await this.examModel.findExamById(examId);
+        
+        if (!exam || exam.teacherId !== teacherId) {
+            return null;
+        }
+
+        return this.examModel.updateCorrectionTemplate(examId, templateFile);
+    }
 }

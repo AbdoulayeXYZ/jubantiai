@@ -244,4 +244,28 @@ export class ExamController {
             return res.status(500).json({ message: 'Failed to download correction template' });
         }
     };
+
+    updateCorrectionTemplate = async (req: Request, res: Response): Promise<Response> => {
+        try {
+            if (!req.user || req.user.role !== 'teacher') {
+                return res.status(403).json({ message: 'Only teachers can update correction templates' });
+            }
+
+            if (!req.file) {
+                return res.status(400).json({ message: 'Template file is required' });
+            }
+
+            const examId = parseInt(req.params.id);
+            const updatedExam = await this.examService.updateCorrectionTemplate(examId, req.user.id, req.file);
+            
+            if (!updatedExam) {
+                return res.status(404).json({ message: 'Exam not found or not authorized' });
+            }
+
+            return res.status(200).json(updatedExam);
+        } catch (error) {
+            console.error('Error updating correction template:', error);
+            return res.status(500).json({ message: 'Failed to update correction template' });
+        }
+    };
 }

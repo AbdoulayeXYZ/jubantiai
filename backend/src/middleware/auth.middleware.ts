@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
-import { getRepository } from 'typeorm';
+import { AppDataSource } from '../configs/data-sources';
 import { User } from '../entities/user.entity';
 
 export const authMiddleware = async (req: Request, res: Response, next: NextFunction) => {
@@ -17,20 +17,26 @@ export const authMiddleware = async (req: Request, res: Response, next: NextFunc
             return res.status(401).json({ message: 'No token provided' });
         }
 
-        const decoded = jwt.verify(token, process.env.JWT || 'your-secret-key') as any;
-        
-        const userRepository = getRepository(User);
-        const user = await userRepository.findOne({ where: { id: decoded.id } });
+        try {
+            const decoded = jwt.verify(token, process.env.JWT || '') as any;
+            
+            const userRepository = AppDataSource.getRepository(User);
+            const user = await userRepository.findOne({ where: { id: decoded.id } });
 
-        if (!user) {
-            return res.status(401).json({ message: 'User not found' });
+            if (!user) {
+                return res.status(401).json({ message: 'User not found' });
+            }
+
+            // Set the user object on the request
+            req.user = user;
+            
+            next();
+        } catch (jwtError) {
+            console.error('JWT verification failed:', jwtError);
+            return res.status(401).json({ message: 'Invalid token' });
         }
-
-        // Set the user object on the request
-        req.user = user;
-        
-        next();
     } catch (error) {
-        return res.status(401).json({ message: 'Invalid token' });
+        console.error('Auth middleware error:', error);
+        return res.status(500).json({ message: 'Internal server error' });
     }
 }; 
