@@ -1,4 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm';
+import { Exam } from './exam.entity';
 
 @Entity('users')
 export class User {
@@ -16,6 +17,9 @@ export class User {
         enum: ['teacher', 'student']
     })
     role!: 'teacher' | 'student';
+
+    @OneToMany(() => Exam, exam => exam.teacher)
+    createdExams!: Exam[];
 
     @CreateDateColumn()
     createdAt!: Date;
