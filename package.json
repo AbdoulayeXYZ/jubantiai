@@ -10,6 +10,17 @@
   },
   "private": true,
   "dependencies": {
+<<<<<<< HEAD
+    "@angular/animations": "^18.0.0",
+    "@angular/common": "^18.0.0",
+    "@angular/compiler": "^18.0.0",
+    "@angular/core": "^18.0.0",
+    "@angular/forms": "^18.0.0",
+    "@angular/platform-browser": "^18.0.0",
+    "@angular/platform-browser-dynamic": "^18.0.0",
+    "@angular/router": "^18.0.0",
+    "nodemon": "^3.1.9",
+=======
     "@angular/animations": "^19.2.1",
     "@angular/cli": "^19.2.1",
     "@angular/common": "^19.2.1",
@@ -18,12 +29,18 @@
     "@angular/platform-browser": "^19.2.1",
     "@angular/platform-browser-dynamic": "^19.2.1",
     "@angular/router": "^19.2.1",
+<<<<<<< HEAD
     "bcrypt": "^5.1.1",
     "dotenv": "^16.4.7",
     "jsonwebtoken": "^9.0.2",
     "mysql2": "^3.13.0",
     "rxjs": "~7.8.0",
     "sequelize": "^6.37.6",
+=======
+>>>>>>> 1915adb7f2f8fa44db36b68412c28ab09a8da6cf
+    "rxjs": "~7.8.0",
+    "ts-node": "^10.9.2",
+>>>>>>> 5fd8ea0d8c2bc3dbc6aefe6efc7bf48cf353f95a
     "tslib": "^2.3.0",
     "zone.js": "^0.15.0"
   },
