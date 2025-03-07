@@ -47,3 +47,11 @@ export const authenticateUser = async (email: string, password: string) => {
 
     return { user, token };
 };
+
+// Service pour récupérer tous les utilisateurs
+export const getAllUsers = async () => {
+    const users = await userRepository.find({
+        select: ["id", "email", "role", "createdAt", "updatedAt"] // Exclure le password
+    });
+    return users;
+};

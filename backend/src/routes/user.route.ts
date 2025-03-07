@@ -1,5 +1,5 @@
 import express, { Request, Response } from 'express';
-import { registerUser, authenticateUser } from '../services/user.service';
+import { registerUser, authenticateUser, getAllUsers } from '../services/user.service';
 const router = express.Router();
 
 // Route d'enregistrement d'utilisateur
@@ -27,6 +27,16 @@ router.post('/login', async (req: Request, res: Response) => {
     } catch (error: unknown) {
         res.status(401).json({ error: 'Login failed: ' + (error as Error).message });
 
+    }
+});
+
+// Route pour obtenir tous les utilisateurs
+router.get('/', async (req: Request, res: Response) => {
+    try {
+        const users = await getAllUsers();
+        res.status(200).json(users);
+    } catch (error: unknown) {
+        res.status(500).json({ error: (error as Error).message });
     }
 });
 
