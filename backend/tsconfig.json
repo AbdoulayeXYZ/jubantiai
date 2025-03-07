@@ -1,21 +1,4 @@
 {
-<<<<<<< HEAD
-    "compilerOptions": {
-        "target": "es6",
-        "module": "commonjs",
-        "strict": true,
-        "esModuleInterop": true,
-        "skipLibCheck": true,
-        "forceConsistentCasingInFileNames": true
-    },
-    "include": [
-        "src/**/*",
-        "app.ts"
-    ],
-    "exclude": [
-        "node_modules"
-    ]
-=======
   "compilerOptions": {
     /* Visit https://aka.ms/tsconfig to read more about this file */
 
@@ -123,5 +106,4 @@
     // "skipDefaultLibCheck": true,                      /* Skip type checking .d.ts files that are included with TypeScript. */
     "skipLibCheck": true                                 /* Skip type checking all .d.ts files. */
   },
->>>>>>> 5fd8ea0d8c2bc3dbc6aefe6efc7bf48cf353f95a
 }

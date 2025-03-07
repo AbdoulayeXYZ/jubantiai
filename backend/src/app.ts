@@ -5,7 +5,8 @@ import * as dotenv from 'dotenv';
 import bodyParser from 'body-parser';
 import { Request, Response } from 'express';
 import cors from 'cors';
-// importer UserRoute ici 
+import userRoutes from './routes/user.route';
+
 
 
 // Configuration de l'environnement
@@ -25,10 +26,13 @@ app.use(cors({
   credentials: true
 }));
 
-// Routes
+// Basics routes for testing
 app.get('/', (req: Request, res: Response) => {
     res.send('Hello from Express server!');
 });
+
+// Routes
+app.use('/api/users', userRoutes);
 
 // Démarrage du serveur après la connexion à la base de données
 const startServer = async () => {

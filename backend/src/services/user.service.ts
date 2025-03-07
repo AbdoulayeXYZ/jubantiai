@@ -2,7 +2,7 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import UserModel from '../models/user.model';
 import sequelize from '../configs/database.config'; // Correctly import the default export
-
+import { AppDataSource } from '../configs/data-sources';
 
 const User = UserModel(sequelize); // Initialize the User model with the Sequelize instance
 
