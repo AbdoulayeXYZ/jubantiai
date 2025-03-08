@@ -7,6 +7,7 @@ import { Request, Response } from 'express';
 import cors from 'cors';
 import userRoutes from './routes/user.route';
 import examRoutes from './routes/exam.route';
+import submissionRoutes from './routes/submission.route';
 
 // Configuration de l'environnement
 dotenv.config();
@@ -40,6 +41,7 @@ const startServer = async () => {
     // Routes
     app.use('/api/users', userRoutes);
     app.use('/api/exams', examRoutes);
+    app.use('/api', submissionRoutes);
 
     // Then start Express server
     app.listen(PORT, () => {

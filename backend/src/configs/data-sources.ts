@@ -3,6 +3,8 @@ import * as dotenv from 'dotenv';
 import { User } from '../entities/user.entity';
 import { Exam } from '../entities/exam.entity';
 import { Submission } from '../entities/submission.entity';
+import { Grade } from '../entities/grade.entity';
+import { PlagiarismReport } from '../entities/plagiarism-report.entity';
 
 dotenv.config();
 
@@ -25,7 +27,13 @@ export const AppDataSource = new DataSource({
     database: dbConfig.database,
     synchronize: true, // Be careful with this in production
     logging: true,
-    entities: [User, Exam, Submission],
+    entities: [
+        User,
+        Exam,
+        Submission,
+        Grade,
+        PlagiarismReport
+    ],
     subscribers: [],
     migrations: [],
 });
