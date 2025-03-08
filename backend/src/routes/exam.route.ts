@@ -48,7 +48,7 @@ const examController = new ExamController();
 router.use(authMiddleware);
 
 // Create a new exam (teacher only, requires file upload)
-router.post('/', upload.single('subjectFile'), examController.createExam);
+router.post('/', upload.single('file'), examController.createExam);
 
 // Update correction template
 router.post('/:id/correction-template', upload.single('templateFile'), examController.updateCorrectionTemplate);
