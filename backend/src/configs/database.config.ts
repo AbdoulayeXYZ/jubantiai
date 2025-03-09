@@ -14,17 +14,11 @@ console.log('Database Config:', {
 
 // Connexion à la base de données en utilisant les variables d'environnement
 
-const sequelize = new Sequelize(
-    process.env.DB_NAME as string,              // Le nom de la base de données
-    process.env.DB_USERNAME as string,          // Le nom d'utilisateur de la base de données
-    process.env.DB_PASSWORD as string,          // Le mot de passe de la base de données
-    {
-        host: process.env.DB_HOST,              // L'hôte de la base de données
-        dialect: 'mysql',                       // Le type de base de données (MySQL dans ce cas)
-        port: process.env.DB_PORT ? parseInt(process.env.DB_PORT, 10) : 3306, // Port par défaut 3306 si non défini
-        logging: false,                         // Désactiver le logging SQL pour ne pas surcharger les logs
-    }
-);
+const sequelize = new Sequelize('jubantiai_db', 'root', '', {
+    host: 'localhost',
+    dialect: 'mysql',
+    port: 3306
+});
 
 // Vérification de la connexion à la base de données
 sequelize.authenticate()

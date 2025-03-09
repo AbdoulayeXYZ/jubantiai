@@ -6,7 +6,12 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon --watch 'src/**/*.ts' --exec ts-node src/app.ts",
-    "build": "tsc"
+    "build": "tsc",
+    "typeorm": "typeorm-ts-node-commonjs",
+    "migration:run": "npm run typeorm migration:run -- -d src/configs/data-sources.ts",
+    "migration:generate": "npm run typeorm migration:generate -- -d src/configs/data-sources.ts",
+    "migration:create": "npm run typeorm migration:create",
+    "migration:revert": "npm run typeorm migration:revert -- -d src/configs/data-sources.ts"
   },
   "keywords": [],
   "author": "jubanti ai",

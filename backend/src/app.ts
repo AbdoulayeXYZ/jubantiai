@@ -8,6 +8,7 @@ import cors from 'cors';
 import userRoutes from './routes/user.route';
 import examRoutes from './routes/exam.route';
 import submissionRoutes from './routes/submission.route';
+import gradeRoutes from './routes/grade.route';
 
 // Configuration de l'environnement
 dotenv.config();
@@ -42,6 +43,7 @@ const startServer = async () => {
     app.use('/api/users', userRoutes);
     app.use('/api/exams', examRoutes);
     app.use('/api', submissionRoutes);
+    app.use('/api/grades', gradeRoutes);
 
     // Then start Express server
     app.listen(PORT, () => {

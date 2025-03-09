@@ -159,4 +159,11 @@ export class SubmissionModel {
 
         return stats;
     }
+
+    async getSubmissionById(id: number): Promise<Submission | null> {
+        return this.repository.findOne({
+            where: { id },
+            relations: ['student', 'exam', 'grades']
+        });
+    }
 }

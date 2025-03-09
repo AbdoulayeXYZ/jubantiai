@@ -1,9 +1,14 @@
 import { User } from '../entities/user.entity';
 
+export interface JWTPayload {
+    id: number;
+    role: 'teacher' | 'student';
+}
+
 declare global {
     namespace Express {
-        export interface Request {
-            user?: User;
+        interface Request {
+            user?: JWTPayload;
         }
     }
 }

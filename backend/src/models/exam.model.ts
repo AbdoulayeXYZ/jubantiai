@@ -138,4 +138,11 @@ export class ExamModel {
         await this.examRepository.update(id, data);
         return this.findById(id);
     }
+
+    async getExamById(id: number): Promise<Exam | null> {
+        return this.examRepository.findOne({
+            where: { id },
+            relations: ['teacher', 'submissions']
+        });
+    }
 }
