@@ -12,11 +12,18 @@ export class User {
     @Column()
     password!: string;
 
+    @Column()
+    firstName!: string;
+
+    @Column()
+    lastName!: string;
+
     @Column({
         type: 'enum',
-        enum: ['teacher', 'student']
+        enum: ['student', 'teacher'],
+        default: 'student'
     })
-    role!: 'teacher' | 'student';
+    role!: 'student' | 'teacher';
 
     @OneToMany(() => Exam, exam => exam.teacher)
     createdExams!: Exam[];

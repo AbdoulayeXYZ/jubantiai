@@ -2,8 +2,58 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { AppDataSource } from '../configs/data-sources';
 import { User } from '../entities/user.entity';
+import { Repository } from 'typeorm';
+import { AppError } from '../utils/app-error';
 
 const userRepository = AppDataSource.getRepository(User);
+
+interface ICreateUserDto {
+    email: string;
+    password: string;
+    firstName: string;
+    lastName: string;
+    role: 'student' | 'teacher';
+}
+
+export class UserService {
+    private userRepository: Repository<User>;
+
+    constructor() {
+        this.userRepository = AppDataSource.getRepository(User);
+    }
+
+    async create(userData: ICreateUserDto): Promise<User> {
+        const user = this.userRepository.create(userData);
+        return await this.userRepository.save(user);
+    }
+
+    async findByEmail(email: string): Promise<User | null> {
+        return await this.userRepository.findOne({ where: { email } });
+    }
+
+    async findById(id: number): Promise<User | null> {
+        return await this.userRepository.findOne({ where: { id } });
+    }
+
+    async update(id: number, userData: Partial<ICreateUserDto>): Promise<User> {
+        const user = await this.findById(id);
+        if (!user) {
+            throw new AppError('User not found', 404);
+        }
+
+        Object.assign(user, userData);
+        return await this.userRepository.save(user);
+    }
+
+    async delete(id: number): Promise<void> {
+        const user = await this.findById(id);
+        if (!user) {
+            throw new AppError('User not found', 404);
+        }
+
+        await this.userRepository.remove(user);
+    }
+}
 
 // Service d'enregistrement de l'utilisateur
 export const registerUser = async (userData: { email: string; password: string; role: string; }) => {

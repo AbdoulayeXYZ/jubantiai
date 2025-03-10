@@ -6,12 +6,17 @@ import { User } from '../entities/user.entity';
 import { ICreateSubmissionDto, IUpdateSubmissionDto, ISubmissionFilters, ISubmissionStats } from '../interfaces/submission.interface';
 import * as fs from 'fs';
 import * as path from 'path';
+import { Repository } from 'typeorm';
 
 export class SubmissionModel {
-    private repository = AppDataSource.getRepository(Submission);
+    private repository: Repository<Submission>;
     private examRepository = AppDataSource.getRepository(Exam);
     private userRepository = AppDataSource.getRepository(User);
     private gradeRepository = AppDataSource.getRepository(Grade);
+
+    constructor() {
+        this.repository = AppDataSource.getRepository(Submission);
+    }
 
     async create(createSubmissionDto: ICreateSubmissionDto & { filePath: string }): Promise<Submission> {
         const exam = await this.examRepository.findOne({ where: { id: createSubmissionDto.examId } });
@@ -165,5 +170,24 @@ export class SubmissionModel {
             where: { id },
             relations: ['student', 'exam', 'grades']
         });
+    }
+
+    async getSubmissionsByExamId(examId: number): Promise<Submission[]> {
+        return this.repository.find({
+            where: { examId },
+            relations: ['exam', 'grades']
+        });
+    }
+
+    async getSubmissionsByStudentId(studentId: number): Promise<Submission[]> {
+        return this.repository.find({
+            where: { studentId },
+            relations: ['exam', 'grades']
+        });
+    }
+
+    async updateSubmission(id: number, filePath: string): Promise<Submission | null> {
+        await this.repository.update(id, { filePath });
+        return this.getSubmissionById(id);
     }
 }

@@ -1,0 +1,5 @@
+**Correction Template for SQL Exam: Creating a Database**
+
+1. **Key Concepts and Topics to be Evaluated:**
+	* SQL syntax for creating a database
+	

@@ -5,7 +5,6 @@ import { Exam } from '../entities/exam.entity';
 import { Submission } from '../entities/submission.entity';
 import { Grade } from '../entities/grade.entity';
 import { PlagiarismReport } from '../entities/plagiarism-report.entity';
-import { UpdateValidatedByColumn1709999999999 } from '../migrations/1709999999999-UpdateValidatedByColumn';
 
 dotenv.config();
 
@@ -26,7 +25,7 @@ export const AppDataSource = new DataSource({
     username: dbConfig.username,
     password: dbConfig.password,
     database: dbConfig.database,
-    synchronize: false, // Disable synchronize when using migrations
+    synchronize: true, // En développement seulement, à désactiver en production
     logging: true,
     entities: [
         User,
@@ -35,6 +34,6 @@ export const AppDataSource = new DataSource({
         Grade,
         PlagiarismReport
     ],
-    subscribers: [],
-    migrations: [UpdateValidatedByColumn1709999999999],
+    migrations: [],
+    subscribers: []
 });

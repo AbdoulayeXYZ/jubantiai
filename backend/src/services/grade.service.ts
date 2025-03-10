@@ -5,7 +5,11 @@ import { NotificationService } from './notification.service';
 import { OllamaService } from './ollama.service';
 import { ICreateGradeDto, IUpdateGradeDto, IGradeValidationResult, IGradeSummary } from '../interfaces/grade.interface';
 import { Grade } from '../entities/grade.entity';
+import { Submission } from '../entities/submission.entity';
 import { AppError } from '../utils/app-error';
+import * as fs from 'fs/promises';
+import * as path from 'path';
+import pdfParse from 'pdf-parse';
 
 export class GradeService {
     private gradeModel: GradeModel;
@@ -155,32 +159,95 @@ export class GradeService {
         };
     }
 
+    private async readPDFContent(filePath: string): Promise<string> {
+        console.log(`Attempting to read PDF from path: ${filePath}`);
+        
+        try {
+            // Vérifier si le fichier existe
+            try {
+                await fs.access(filePath);
+            } catch (error) {
+                console.error(`File does not exist at path: ${filePath}`);
+                throw new AppError(`File not found at path: ${filePath}`, 404);
+            }
+
+            // Lire le fichier
+            console.log('Reading file buffer...');
+            const dataBuffer = await fs.readFile(filePath);
+            console.log(`File buffer read successfully, size: ${dataBuffer.length} bytes`);
+
+            // Parser le PDF
+            console.log('Parsing PDF content...');
+            const data = await pdfParse(dataBuffer);
+            console.log(`PDF parsed successfully, extracted text length: ${data.text.length} characters`);
+
+            return data.text;
+        } catch (error: unknown) {
+            console.error('Error reading PDF:', error);
+            if (error instanceof AppError) {
+                throw error;
+            }
+            const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+            throw new AppError(`Failed to read PDF content: ${errorMessage}`, 500);
+        }
+    }
+
+    private async saveTemplateToFile(examId: number, template: string): Promise<string> {
+        const templateDir = path.join(__dirname, '../../uploads/templates');
+        await fs.mkdir(templateDir, { recursive: true });
+        
+        const templatePath = path.join(templateDir, `template_${examId}_${Date.now()}.txt`);
+        await fs.writeFile(templatePath, template, 'utf8');
+        
+        return templatePath;
+    }
+
     async generateAIGrade(submissionId: number): Promise<Grade> {
+        console.log(`Starting AI grade generation for submission ID: ${submissionId}`);
+        
         const submission = await this.submissionModel.getSubmissionById(submissionId);
         if (!submission) {
+            console.error(`Submission not found with ID: ${submissionId}`);
             throw new AppError('Submission not found', 404);
         }
+        console.log(`Found submission: ${JSON.stringify(submission)}`);
         
         const exam = await this.examModel.getExamById(submission.examId);
         if (!exam) {
+            console.error(`Exam not found with ID: ${submission.examId}`);
             throw new AppError('Exam not found', 404);
         }
-        
-        // Get correction template (or generate one if not available)
-        let correctionTemplate = exam.correctionTemplatePath;
-        if (!correctionTemplate) {
-            correctionTemplate = await this.ollamaService.generateCorrectionTemplate(exam.subjectPath);
-            // Save the generated template
-            await this.examModel.updateExam(exam.id, { correctionTemplatePath: correctionTemplate });
-        }
-        
+        console.log(`Found exam: ${JSON.stringify(exam)}`);
+
         try {
+            // Read the content of the exam subject and student submission
+            console.log('Reading exam subject...');
+            const examContent = await this.readPDFContent(exam.subjectPath);
+            console.log('Reading student submission...');
+            const submissionContent = await this.readPDFContent(submission.filePath);
+            
+            // Get or generate correction template
+            let correctionTemplate = '';
+            if (exam.correctionTemplatePath) {
+                console.log('Reading existing correction template...');
+                correctionTemplate = await fs.readFile(exam.correctionTemplatePath, 'utf8');
+            } else {
+                console.log('Generating correction template...');
+                correctionTemplate = await this.ollamaService.generateCorrectionTemplate(examContent);
+                // Save the generated template to a file
+                const templatePath = await this.saveTemplateToFile(exam.id, correctionTemplate);
+                // Update the exam with the template path
+                await this.examModel.updateExam(exam.id, { correctionTemplatePath: templatePath });
+            }
+            
             // Use AI to grade the submission
+            console.log('Generating AI grade...');
             const aiGradingResult = await this.ollamaService.gradeSubmission(
-                submission.filePath,
+                submissionContent,
                 correctionTemplate,
-                submission.filePath
+                examContent
             );
+            console.log(`AI grading result: ${JSON.stringify(aiGradingResult)}`);
             
             // Create the grade
             const gradeData: ICreateGradeDto = {
@@ -191,10 +258,18 @@ export class GradeService {
                 aiJustification: aiGradingResult.justification
             };
             
-            return await this.createGrade(gradeData);
-        } catch (error: unknown) {
-            const message = error instanceof Error ? error.message : 'Unknown error';
-            throw new AppError(`AI grading failed: ${message}`, 500);
+            console.log('Creating grade record...');
+            const grade = await this.createGrade(gradeData);
+            console.log(`Grade created successfully: ${JSON.stringify(grade)}`);
+
+            return grade;
+        } catch (error) {
+            console.error('Error in generateAIGrade:', error);
+            if (error instanceof AppError) {
+                throw error;
+            }
+            const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+            throw new AppError(`AI grading failed: ${errorMessage}`, 500);
         }
     }
 
@@ -209,5 +284,33 @@ export class GradeService {
 
     async getStudentGrades(studentId: number): Promise<Grade[]> {
         return await this.gradeModel.getStudentGrades(studentId);
+    }
+
+    async checkPlagiarism(submissionId: number): Promise<number[]> {
+        const submission = await this.submissionModel.getSubmissionById(submissionId);
+        if (!submission) {
+            throw new AppError('Submission not found', 404);
+        }
+
+        const exam = await this.examModel.getExamById(submission.examId);
+        if (!exam) {
+            throw new AppError('Exam not found', 404);
+        }
+
+        // Get all submissions for this exam except the current one
+        const allSubmissions = await this.submissionModel.getSubmissionsByExamId(exam.id);
+        const otherSubmissions = allSubmissions.filter((s: Submission) => s.id !== submissionId);
+
+        const submissionContent = await this.readPDFContent(submission.filePath);
+        const similarityResults: number[] = [];
+
+        // Compare with each other submission
+        for (const otherSubmission of otherSubmissions) {
+            const otherContent = await this.readPDFContent(otherSubmission.filePath);
+            const similarity = await this.ollamaService.compareSubmissions(submissionContent, otherContent);
+            similarityResults.push(similarity);
+        }
+
+        return similarityResults;
     }
 }

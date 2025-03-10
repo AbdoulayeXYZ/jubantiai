@@ -11,6 +11,7 @@ export class Grade {
     score!: number;
 
     @Column({ type: 'text', nullable: true })
+    @Column({ type: 'int', nullable: true })
     comment?: string;
 
     @Column()
@@ -34,6 +35,12 @@ export class Grade {
 
     @Column({ type: 'text', nullable: true })
     aiJustification?: string;
+
+    @Column({ type: 'text', nullable: true })
+    key_concepts?: string;
+
+    @Column({ type: 'text', nullable: true })
+    methodological_approach?: string;
 
     @CreateDateColumn()
     createdAt!: Date;
