@@ -20,6 +20,11 @@ export class LoginComponent {
       password: ['', [Validators.required]]
     });
   }
+  @Component({
+    selector: 'app-register', // Vérifie que c'est bien ce nom-là
+    templateUrl: './register.component.html',
+  })
+  
 
   onSubmit(): void {
     if (this.loginForm.valid) {

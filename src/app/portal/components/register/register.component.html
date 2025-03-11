@@ -1,1 +1,114 @@
-<p>register works!</p>
+<!-- register.component.html -->
+<div class="register-card">
+    <div class="card-header">
+      <h2 class="card-title">Inscription</h2>
+      <p class="card-subtitle">Créez votre compte DeepEval</p>
+    </div>
+    
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+      <div class="card-content">
+        <div class="name-grid">
+          <div class="form-group">
+            <label for="firstName">Prénom</label>
+            <input 
+              id="firstName" 
+              type="text" 
+              formControlName="firstName" 
+              class="form-control" 
+              [ngClass]="{'input-error': isFieldInvalid('firstName')}"
+              required
+            >
+            <div *ngIf="isFieldInvalid('firstName')" class="error-message">
+              {{ getErrorMessage('firstName') }}
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label for="lastName">Nom</label>
+            <input 
+              id="lastName" 
+              type="text" 
+              formControlName="lastName" 
+              class="form-control" 
+              [ngClass]="{'input-error': isFieldInvalid('lastName')}"
+              required
+            >
+            <div *ngIf="isFieldInvalid('lastName')" class="error-message">
+              {{ getErrorMessage('lastName') }}
+            </div>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input 
+            id="email" 
+            type="email" 
+            formControlName="email" 
+            class="form-control" 
+            [ngClass]="{'input-error': isFieldInvalid('email')}"
+            required
+          >
+          <div *ngIf="isFieldInvalid('email')" class="error-message">
+            {{ getErrorMessage('email') }}
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="password">Mot de passe</label>
+          <input 
+            id="password" 
+            type="password" 
+            formControlName="password" 
+            class="form-control" 
+            [ngClass]="{'input-error': isFieldInvalid('password')}"
+            required
+          >
+          <div *ngIf="isFieldInvalid('password')" class="error-message">
+            {{ getErrorMessage('password') }}
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label>Rôle</label>
+          <div class="radio-group">
+            <div class="radio-option">
+              <input 
+                type="radio" 
+                id="student" 
+                name="role" 
+                formControlName="role" 
+                value="student"
+              >
+              <label for="student" class="radio-label">Étudiant</label>
+            </div>
+            <div class="radio-option">
+              <input 
+                type="radio" 
+                id="teacher" 
+                name="role" 
+                formControlName="role" 
+                value="teacher"
+              >
+              <label for="teacher" class="radio-label">Enseignant</label>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="card-footer">
+        <button 
+          type="submit" 
+          class="btn btn-primary" 
+          [disabled]="registerForm.invalid || isLoading"
+          [ngClass]="{'btn-loading': isLoading}"
+        >
+          <span *ngIf="!isLoading">S'inscrire</span>
+          <span *ngIf="isLoading">
+            <span class="spinner"></span>
+            Inscription en cours...
+          </span>
+        </button>
+      </div>
+    </form>
+  </div>

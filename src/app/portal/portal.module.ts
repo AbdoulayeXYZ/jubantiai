@@ -6,16 +6,20 @@ import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
 import { ConnexionComponent } from './components/connexion/connexion.component';
 
-
 @NgModule({
   declarations: [
     LoginComponent,
-    RegisterComponent,
+    RegisterComponent,  // Vérifie que ce nom est correct
     ConnexionComponent
   ],
   imports: [
     CommonModule,
     PortalRoutingModule
+  ],
+  exports: [  // Ajoute ceci si d'autres modules doivent utiliser ces composants
+    LoginComponent,
+    RegisterComponent,
+    ConnexionComponent
   ]
 })
 export class PortalModule { }
