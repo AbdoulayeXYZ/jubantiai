@@ -98,6 +98,31 @@ export class ExamController {
         }
     };
 
+    getExamsByTeacher = async (req: Request, res: Response): Promise<Response> => {
+        try {
+            if (!req.user) {
+                return res.status(401).json({ message: 'Authentication required' });
+            }
+
+            const teacherId = parseInt(req.params.teacherId);
+            
+            if (isNaN(teacherId)) {
+                return res.status(400).json({ message: 'Invalid teacher ID' });
+            }
+
+            // Verify that the requesting user is the teacher
+            if (req.user.role !== 'teacher' || req.user.id !== teacherId) {
+                return res.status(403).json({ message: 'Access denied' });
+            }
+            
+            const exams = await this.examService.getExamsByTeacher(teacherId);
+            return res.status(200).json(exams);
+        } catch (error) {
+            console.error('Error getting teacher exams:', error);
+            return res.status(500).json({ message: 'Failed to get teacher exams' });
+        }
+    };
+
     updateExam = async (req: Request, res: Response): Promise<Response> => {
         try {
             if (!req.user) {

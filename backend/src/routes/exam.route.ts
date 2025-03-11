@@ -56,6 +56,9 @@ router.post('/:id/correction-template', upload.single('templateFile'), examContr
 // Get all exams (for teacher: their exams, for student: published exams)
 router.get('/', examController.getExams);
 
+// Get exams for a specific teacher
+router.get('/teacher/:teacherId', examController.getExamsByTeacher);
+
 // Get a specific exam
 router.get('/:id', examController.getExamById);
 
