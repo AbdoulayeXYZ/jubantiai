@@ -1,0 +1,11 @@
+<form [formGroup]="submissionForm" (ngSubmit)="onSubmit()">
+  <div>
+    <label for="examId">ID de l'Examen:</label>
+    <input id="examId" formControlName="examId" required>
+  </div>
+  <div>
+    <label for="filePath">Chemin du Fichier:</label>
+    <input id="filePath" formControlName="filePath" required>
+  </div>
+  <button type="submit">Soumettre</button>
+</form>
