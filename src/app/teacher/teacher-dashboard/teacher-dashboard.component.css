@@ -1,0 +1,16 @@
+.teacher-dashboard {
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.teacher-dashboard h1 {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.teacher-dashboard p {
+  font-size: 16px;
+  color: #555;
+}

@@ -1,0 +1,27 @@
+<div>
+  <h2>Student Submissions</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Student ID</th>
+        <th>Exam ID</th>
+        <th>Submission Date</th>
+        <th>File Path</th>
+        <th>Grade</th>
+        <th>Feedback</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let submission of submissions">
+        <td>{{ submission.id }}</td>
+        <td>{{ submission.studentId }}</td>
+        <td>{{ submission.examId }}</td>
+        <td>{{ submission.submissionDate | date }}</td>
+        <td>{{ submission.filePath }}</td>
+        <td>{{ submission.grade }}</td>
+        <td>{{ submission.feedback }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

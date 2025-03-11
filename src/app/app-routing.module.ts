@@ -10,7 +10,8 @@ export const routes: Routes = [
   },
   {
     path: 'auth',
-    loadChildren: () => import('./portal/components/connexion/connexion.component').then(m => m.AuthModule)
+    loadChildren: () => import('./portal/auth.module').then(m => m.AuthModule)
+
   },
   {
     path: 'teacher',
