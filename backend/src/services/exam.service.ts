@@ -1,9 +1,10 @@
 import { ExamModel } from '../models/exam.model';
 import { ICreateExamDto, IUpdateExamDto, IExamWithSubmissionsCount } from '../interfaces/exam.interface';
 import { NotificationService } from '../notification/notification.service';
-import { OllamaService } from '../ai/ollama.service';
+import { OllamaService } from './ollama.service';
 import { Exam } from '../entities/exam.entity';
 import fs from 'fs';
+import path from 'path';
 
 export class ExamService {
     private examModel: ExamModel;
@@ -82,32 +83,76 @@ export class ExamService {
     }
 
     async generateCorrectionTemplate(examId: number, teacherId: number): Promise<string | null> {
-        // Verify teacher owns this exam
+        // Vérifier que l'enseignant possède cet examen
         const exam = await this.examModel.findExamById(examId);
         
         if (!exam || exam.teacherId !== teacherId) {
             return null;
         }
-        
-        if (!exam.subjectPath || !fs.existsSync(exam.subjectPath)) {
-            throw new Error("Subject file not found");
-        }
-        
-        // Use DeepSeek via Ollama to generate a correction template
+
         try {
-            const subjectContent = fs.readFileSync(exam.subjectPath, 'utf8');
-            const templateContent = await this.ollamaService.generateCorrectionTemplate(subjectContent, exam.title);
+            // Créer un fichier de template avec les critères d'évaluation
+            const template = {
+                criteria: {
+                    understanding: {
+                        description: "Évaluation de la compréhension des concepts clés",
+                        maxScore: 8,
+                        criteria: [
+                            "Identification des concepts principaux",
+                            "Application correcte des théories",
+                            "Liens entre les concepts"
+                        ]
+                    },
+                    methodology: {
+                        description: "Évaluation de la méthodologie et de l'approche",
+                        maxScore: 6,
+                        criteria: [
+                            "Structure logique de la réponse",
+                            "Utilisation d'exemples pertinents",
+                            "Argumentation claire"
+                        ]
+                    },
+                    structure: {
+                        description: "Évaluation de la présentation et organisation",
+                        maxScore: 4,
+                        criteria: [
+                            "Clarté de l'expression",
+                            "Organisation des idées",
+                            "Qualité de la rédaction"
+                        ]
+                    },
+                    additional: {
+                        description: "Points supplémentaires pour l'originalité",
+                        maxScore: 2,
+                        criteria: [
+                            "Perspectives originales",
+                            "Exemples innovants",
+                            "Réflexion approfondie"
+                        ]
+                    }
+                },
+                totalScore: 20,
+                examInfo: {
+                    id: exam.id,
+                    title: exam.title,
+                    generatedAt: new Date().toISOString()
+                }
+            };
             
-            // Save the template
-            const templatePath = exam.subjectPath.replace('.pdf', '_correction_template.pdf');
-            fs.writeFileSync(templatePath, templateContent);
+            // Sauvegarder le template
+            const templatePath = path.join(
+                path.dirname(exam.subjectPath), 
+                `correction_template_${examId}.json`
+            );
             
-            // Update the exam with the template path
+            fs.writeFileSync(templatePath, JSON.stringify(template, null, 2));
+            
+            // Mettre à jour l'examen avec le chemin du template
             await this.examModel.updateExam(examId, { correctionTemplatePath: templatePath });
             
             return templatePath;
         } catch (error) {
-            console.error('Error generating correction template:', error);
+            console.error('Error saving correction template:', error);
             return null;
         }
     }
