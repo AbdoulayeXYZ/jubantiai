@@ -1,1 +1,40 @@
-<p>navbar works!</p>
+<nav class="navbar">
+    <div class="navbar-container">
+      <!-- Logo et nom de la plateforme -->
+      <div class="navbar-brand">
+        <a href="#" class="navbar-logo">
+          <span class="navbar-title">DeepEval</span>
+        </a>
+      </div>
+  
+      <!-- Liens de navigation -->
+      <div class="navbar-links">
+        <a href="#" class="navbar-link">Accueil</a>
+        <a href="#" class="navbar-link">À propos</a>
+        <a href="#" class="navbar-link">Services</a>
+        <a href="#" class="navbar-link">Tarifs</a>
+        <a href="#" class="navbar-link">Contact</a>
+      </div>
+  
+      <!-- Bouton de connexion -->
+      <div class="navbar-actions">
+        <a href="#" class="navbar-button">Connexion</a>
+      </div>
+  
+      <!-- Menu mobile -->
+      <div class="navbar-mobile">
+        <button (click)="toggleMobileMenu()" class="navbar-toggle">
+          <span class="navbar-toggle-icon"></span>
+        </button>
+      </div>
+    </div>
+  
+    <!-- Menu mobile déroulant -->
+    <div *ngIf="isMobileMenuOpen" class="navbar-mobile-menu">
+      <a href="#" class="navbar-mobile-link">Accueil</a>
+      <a href="#" class="navbar-mobile-link">À propos</a>
+      <a href="#" class="navbar-mobile-link">Services</a>
+      <a href="#" class="navbar-mobile-link">Tarifs</a>
+      <a href="#" class="navbar-mobile-link">Contact</a>
+    </div>
+  </nav>

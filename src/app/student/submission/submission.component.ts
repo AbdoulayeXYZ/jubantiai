@@ -1,11 +1,14 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SubmissionService } from '../submission.service';
 
 @Component({
   selector: 'app-submission',
   templateUrl: './submission.component.html',
-  styleUrls: ['./submission.component.css']
+  imports: [
+    FormsModule,
+    ReactiveFormsModule
+  ]
 })
 export class SubmissionComponent {
   submissionForm: FormGroup;

@@ -1,1 +1,59 @@
-<p>Salamata is here!</p>
+<!-- login-form.component.html -->
+<div class="login-card">
+    <div class="card-header">
+      <h2 class="card-title">Connexion</h2>
+      <p class="card-subtitle">Connectez-vous à votre compte DeepEval</p>
+    </div>
+    <a href="/auth/register">register</a>
+    
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <div class="card-content">
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input 
+            id="email" 
+            type="email" 
+            formControlName="email" 
+            class="form-control" 
+            [ngClass]="{'input-error': isFieldInvalid('email')}"
+            placeholder="Entrez votre email" 
+            required
+          >
+          <div *ngIf="isFieldInvalid('email')" class="error-message">
+            {{ getErrorMessage('email') }}
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="password">Mot de passe</label>
+          <input 
+            id="password" 
+            type="password" 
+            formControlName="password" 
+            class="form-control" 
+            [ngClass]="{'input-error': isFieldInvalid('password')}"
+            placeholder="Entrez votre mot de passe" 
+            required
+          >
+          <div *ngIf="isFieldInvalid('password')" class="error-message">
+            {{ getErrorMessage('password') }}
+          </div>
+        </div>
+      </div>
+      
+      <div class="card-footer">
+        <button 
+          type="submit" 
+          class="btn btn-primary" 
+          [disabled]="loginForm.invalid || isLoading"
+          [ngClass]="{'btn-loading': isLoading}"
+        >
+          <span *ngIf="!isLoading">Se connecter</span>
+          <span *ngIf="isLoading">
+            <span class="spinner"></span>
+            Connexion en cours...
+          </span>
+        </button>
+      </div>
+    </form>
+  </div>

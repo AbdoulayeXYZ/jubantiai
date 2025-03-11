@@ -7,5 +7,10 @@ import { Component } from '@angular/core';
   styleUrl: './navbar.component.css'
 })
 export class NavbarComponent {
+  isMobileMenuOpen: boolean = false;
 
+  // Fonction pour basculer le menu mobile
+  toggleMobileMenu() {
+    this.isMobileMenuOpen = !this.isMobileMenuOpen;
+  }
 }

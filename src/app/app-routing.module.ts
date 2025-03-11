@@ -5,17 +5,16 @@ import { RoleGuard } from './core/guards/role.guard';
 export const routes: Routes = [
   {
     path: '',
-    redirectTo: 'auth/login',
+    redirectTo: 'auth',
     pathMatch: 'full'
   },
   {
     path: 'auth',
-<<<<<<< HEAD
-    loadChildren: () => import('./portal/auth.module').then(m => m.AuthModule)
-=======
-    loadChildren: () => import('./portal/components/connexion/connexion.component').then(m => m.ConnexionComponent)
->>>>>>> 4a512b8005ab5470f956450fcf5549eb3702b670
-
+    loadComponent: () => import('./portal/components/connexion/connexion.component').then(m => m.ConnexionComponent),
+    children: [
+      { path: 'login', loadComponent: () => import('./portal/components/login/login.component').then(m => m.LoginComponent)},
+      { path: 'register', loadComponent: () => import('./portal/components/register/register.component').then(m => m.RegisterComponent)},
+    ]
   },
   {
     path: 'teacher',
