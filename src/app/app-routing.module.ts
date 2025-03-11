@@ -10,17 +10,17 @@ export const routes: Routes = [
   },
   {
     path: 'auth',
-    loadChildren: () => import('./features/auth/auth.module').then(m => m.AuthModule)
+    loadChildren: () => import('./portal/components/connexion/connexion.component').then(m => m.AuthModule)
   },
   {
     path: 'teacher',
-    loadChildren: () => import('./features/teacher/teacher.module').then(m => m.TeacherModule),
+    loadChildren: () => import('./teacher/teacher.module').then(m => m.TeacherModule),
     canActivate: [RoleGuard],
     data: { role: 'teacher' }
   },
   {
     path: 'student',
-    loadChildren: () => import('./features/student/student.module').then(m => m.StudentModule),
+    loadChildren: () => import('./student/student.module').then(m => m.StudentModule),
     canActivate: [RoleGuard],
     data: { role: 'student' }
   },

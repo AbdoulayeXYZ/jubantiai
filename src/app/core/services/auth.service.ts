@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, map, tap } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { LoginCredentials, RegisterData, AuthResponse, User } from '../models';
+import { LoginCredentials, RegisterData, AuthResponse, User } from '../models/auth.model';
 import { Router } from '@angular/router';
 
 interface ApiResponse<T> {
