@@ -1,0 +1,11 @@
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'app-student-sidebar',
+  standalone: false,
+  templateUrl: './student-sidebar.component.html',
+  styleUrl: './student-sidebar.component.css'
+})
+export class StudentSidebarComponent {
+
+}
