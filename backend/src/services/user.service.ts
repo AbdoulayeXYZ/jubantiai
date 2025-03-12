@@ -10,8 +10,6 @@ const userRepository = AppDataSource.getRepository(User);
 interface ICreateUserDto {
     email: string;
     password: string;
-    firstName: string;
-    lastName: string;
     role: 'student' | 'teacher';
 }
 
