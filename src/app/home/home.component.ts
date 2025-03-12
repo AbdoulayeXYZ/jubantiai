@@ -5,8 +5,8 @@ import { Router } from '@angular/router'; // Importer Router
   selector: 'app-home',
   template: `
     <div class="container">
-      <h1>Bienvenue dans <span class="highlight">EvalDeep</span>!</h1>
-      <p class="subtitle">Votre plateforme pour l'évaluation intelligente et performante.</p>
+      <h1>WELCOME TO <span class="highlight">DEEPEVAL</span>!</h1>
+      <p class="subtitle">Our platform for intelligent and high-performance evaluation using deepseek.</p>
       <div class="button-container">
         <button class="styled-button" (click)="onSignUpClick()">Inscription</button>
         <button class="styled-button" (click)="onLoginClick()">Connexion</button>
@@ -21,7 +21,7 @@ import { Router } from '@angular/router'; // Importer Router
         align-items: center;
         justify-content: center;
         height: 100vh;
-        background: linear-gradient(135deg, #1e3c72, #2a5298);
+        background: linear-gradient(#14b8a6);
         color: #fff;
         font-family: 'Arial', sans-serif;
         text-align: center;
