@@ -15,12 +15,27 @@ export class SubmissionService {
     return this.http.post(this.apiUrl, submissionData);
   }
 
-  // Méthode pour obtenir les soumissions d'un étudiant
+  // Méthode pour obtenir les sujets d'examen
+  getExamSubjects(): Observable<any> {
+    return this.http.get('http://localhost:3000/api/exam-subjects');
+  }
+
   getSubmissions(studentId: number): Observable<any> {
     return this.http.get(`${this.apiUrl}/student/${studentId}`);
   }
 
+  // Méthode pour obtenir les soumissions par date
+  getSubmissionsByDate(studentId: number, date: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/student/${studentId}/date/${date}`);
+  }
+
+  // Méthode pour obtenir les soumissions par statut
+  getSubmissionsByStatus(studentId: number, status: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/student/${studentId}/status/${status}`);
+  }
+
   // Méthode pour obtenir une soumission par ID
+
   getSubmissionById(submissionId: number): Observable<any> {
     return this.http.get(`${this.apiUrl}/${submissionId}`);
   }
