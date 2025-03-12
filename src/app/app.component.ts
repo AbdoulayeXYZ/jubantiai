@@ -10,6 +10,7 @@ import { RouterOutlet } from '@angular/router';
 })
 export class AppComponent {
   constructor(private router: Router) {} // Add constructor for Router
+  title = 'jubantiai';
 
   navigateToLogin() {
     this.router.navigate(['/login']); // Method to navigate to login
