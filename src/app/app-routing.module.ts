@@ -10,12 +10,7 @@ export const routes: Routes = [
   },
   {
     path: 'auth',
-<<<<<<< HEAD
     loadChildren: () => import('./portal/auth.module').then(m => m.AuthModule)
-=======
-    loadChildren: () => import('./portal/components/connexion/connexion.component').then(m => m.ConnexionComponent)
->>>>>>> 4a512b8005ab5470f956450fcf5549eb3702b670
-
   },
   {
     path: 'teacher',
