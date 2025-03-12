@@ -22,7 +22,9 @@ export class ViewSubmissionsComponent implements OnInit {
 
 
 console.log('Fetched submissions:', data); // Log the fetched data for inspection
+console.log('Fetched submissions:', data); // Log the fetched data for inspection
 this.submissions = data; // Assign the fetched submissions to the array
+
 
     }, (error: any) => {
 

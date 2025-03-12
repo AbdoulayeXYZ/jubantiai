@@ -8,14 +8,17 @@ import { ChatbotComponent } from './chatbot/chatbot.component'; // Ajout de l'im
 import { FormsModule, ReactiveFormsModule } from '@angular/forms'; // Import des modules de formulaire
 
 @NgModule({
-  declarations: [
-   
-  ],
+  
   imports: [
     CommonModule,
     StudentRoutingModule,
     FormsModule,
     ReactiveFormsModule // Ajout des modules de formulaire
   ]
+
+
+
+
+
 })
 export class StudentModule { }
