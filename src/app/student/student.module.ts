@@ -9,16 +9,24 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms'; // Import des
 
 @NgModule({
   declarations: [
-    SubmissionComponent,
-    ExamSubjectsComponent,
-    GradesComponent,
-    ChatbotComponent // Ajout des composants à la déclaration
+    // Remove all standalone components from here
   ],
+
+
+
+
+
   imports: [
     CommonModule,
     StudentRoutingModule,
     FormsModule,
     ReactiveFormsModule // Ajout des modules de formulaire
+    // Do not import standalone components here
   ]
+
+
+
+
+
 })
 export class StudentModule { }

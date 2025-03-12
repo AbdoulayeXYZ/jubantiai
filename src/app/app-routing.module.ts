@@ -1,33 +1,24 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { RoleGuard } from './core/guards/role.guard';
+import { HomeComponent } from './home/home.component'; // Import standalone HomeComponent
 
 export const routes: Routes = [
   {
     path: '',
-    redirectTo: 'auth',
+    redirectTo: 'home',
     pathMatch: 'full'
+  },
+  {
+    path: 'home',
+    component: HomeComponent // Utiliser directement HomeComponent
   },
   {
     path: 'auth',
     loadChildren: () => import('./portal/auth.module').then(m => m.AuthModule)
-
-  },
-  {
-    path: 'teacher',
-    loadChildren: () => import('./teacher/teacher.module').then(m => m.TeacherModule),
-    canActivate: [RoleGuard],
-    data: { role: 'teacher' }
-  },
-  {
-    path: 'student',
-    loadChildren: () => import('./student/student.module').then(m => m.StudentModule),
-    canActivate: [RoleGuard],
-    data: { role: 'student' }
   },
   {
     path: '**',
-    redirectTo: 'auth/login'
+    redirectTo: 'home'
   }
 ];
 
@@ -35,4 +26,4 @@ export const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}
