@@ -1,9 +1,13 @@
 // register.component.ts
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { NgClass, NgIf } from '@angular/common';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-register',
+  standalone: true,
+  imports: [NgClass, ReactiveFormsModule, NgIf],
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.css']
 })
@@ -13,12 +17,20 @@ export class RegisterComponent {
 
   constructor(private fb: FormBuilder) {
     this.registerForm = this.fb.group({
-      firstName: ['', Validators.required],
-      lastName: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required],
       role: ['student', Validators.required]
     });
+  }
+
+  
+
+  // New dropdown for role selection
+  get roleOptions() {
+    return [
+      { value: 'student', label: 'Étudiant' },
+      { value: 'teacher', label: 'Enseignant' }
+    ];
   }
 
   onSubmit(): void {

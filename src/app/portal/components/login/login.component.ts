@@ -1,14 +1,21 @@
-import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { CommonModule, NgClass, NgIf } from '@angular/common';
+import { Component, NgModule} from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-login',
-  templateUrl: './login.component.html',
-  styleUrl: './login.component.css',
+  standalone: true,
   imports: [
-    FormsModule, ReactiveFormsModule, CommonModule
-  ]
+    ReactiveFormsModule,
+    NgClass,
+    CommonModule
+  ],
+  templateUrl: './login.component.html',
+  styleUrls: ['./login.component.css'],
+
+  // imports: [] // Retirer la section imports
+
+
 })
 export class LoginComponent {
   loginForm: FormGroup;
@@ -20,10 +27,7 @@ export class LoginComponent {
       password: ['', [Validators.required]]
     });
   }
-  @Component({
-    selector: 'app-register', // Vérifie que c'est bien ce nom-là
-    templateUrl: './register.component.html',
-  })
+
   
 
   onSubmit(): void {

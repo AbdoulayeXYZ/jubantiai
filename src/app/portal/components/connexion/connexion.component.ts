@@ -3,15 +3,20 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { SharedModule } from '../../../shared/shared.module';
-
+import { LoginComponent } from '../login/login.component';
+import { NavbarComponent } from '../../../shared/components/navbar/navbar.component';
+import { RegisterComponent } from '../register/register.component';
 
 @Component({
   selector: 'app-connexion',
+  standalone: true,
+  imports: [SharedModule],
   templateUrl: './connexion.component.html',
-  styleUrl: './connexion.component.css',
-  imports: [
-    ReactiveFormsModule, CommonModule, RouterModule, SharedModule
-  ]
+  styleUrls: ['./connexion.component.css'], // Correction ici
+  // imports: [] // Retirer la section imports
+
+
+
 })
 export class ConnexionComponent {
 }

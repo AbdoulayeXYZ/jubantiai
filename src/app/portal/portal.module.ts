@@ -5,21 +5,22 @@ import { PortalRoutingModule } from './portal-routing.module';
 import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
 import { ConnexionComponent } from './components/connexion/connexion.component';
+import { ReactiveFormsModule } from '@angular/forms';
+import { NavbarComponent } from '../shared/components/navbar/navbar.component';
+import { SharedModule } from '../shared/shared.module';
 
 @NgModule({
   declarations: [
-    LoginComponent,
-    RegisterComponent,  // Vérifie que ce nom est correct
-    ConnexionComponent
   ],
   imports: [
     CommonModule,
-    PortalRoutingModule
-  ],
-  exports: [  // Ajoute ceci si d'autres modules doivent utiliser ces composants
+    PortalRoutingModule,
+    ReactiveFormsModule,
     LoginComponent,
     RegisterComponent,
-    ConnexionComponent
+    SharedModule
+    
+
   ]
 })
 export class PortalModule { }

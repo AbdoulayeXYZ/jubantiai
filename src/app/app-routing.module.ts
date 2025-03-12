@@ -12,12 +12,12 @@ export const routes: Routes = [
     path: 'auth',
     loadComponent: () => import('./portal/components/connexion/connexion.component').then(m => m.ConnexionComponent),
     children: [
-      { path: 'login', loadComponent: () => import('./portal/components/login/login.component').then(m => m.LoginComponent)},
+      { path: 'login', loadComponent: () => import('./portal/components/login/login.component').then(m => m.LoginComponent) },
       {
         path: 'register',
-        loadComponent: () => import('./portal/components/register/register.component').then(m => m.RegisterFormComponent)
+        loadComponent: () => import('./portal/components/register/register.component').then(m => m.RegisterComponent)
       }
-          ]
+    ]
   },
   {
     path: 'teacher',
