@@ -9,11 +9,10 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms'; // Import des
 
 @NgModule({
   declarations: [
-    // SubmissionComponent, // Removed declaration of standalone component
-    // ExamSubjectsComponent, // Removed declaration of standalone component
-    // GradesComponent, // Removed declaration of standalone component
-    // ChatbotComponent // Removed declaration of standalone component
-
+    SubmissionComponent,
+    ExamSubjectsComponent,
+    GradesComponent,
+    ChatbotComponent // Ajout des composants à la déclaration
   ],
   imports: [
     CommonModule,

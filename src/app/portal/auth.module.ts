@@ -4,7 +4,8 @@ import { ConnexionComponent } from './components/connexion/connexion.component';
 
 @NgModule({
   declarations: [
-    ConnexionComponent // Declare the ConnexionComponent
+    // ConnexionComponent // Retirer la déclaration de ConnexionComponent
+
   ],
   imports: [
     CommonModule

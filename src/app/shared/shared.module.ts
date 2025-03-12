@@ -22,7 +22,9 @@ import { NavbarComponent } from './components/navbar/navbar.component';
   exports: [
     CommonModule,
     ReactiveFormsModule,
-    RouterModule
+    RouterModule,
+    HeaderComponent,
+    NavbarComponent
   ]
 })
 export class SharedModule { }
