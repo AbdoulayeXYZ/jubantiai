@@ -10,17 +10,9 @@ import { RegisterComponent } from '../register/register.component';
 @Component({
   selector: 'app-connexion',
   standalone: true,
-<<<<<<< HEAD
-
-=======
   imports: [SharedModule],
->>>>>>> 73a56b662638bd922c7331eca4d9ad5354cd6377
   templateUrl: './connexion.component.html',
-  styleUrls: ['./connexion.component.css'], // Correction ici
-  // imports: [] // Retirer la section imports
-
-
-
+  styleUrls: ['./connexion.component.css'],
 })
 export class ConnexionComponent {
 }
