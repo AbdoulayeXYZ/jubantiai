@@ -9,18 +9,12 @@ import { RegisterComponent } from '../register/register.component';
 @Component({
   selector: 'app-connexion',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, SharedModule, LoginComponent, RegisterComponent],
-  template: `
-    <app-navbar></app-navbar>
-    <div *ngIf="isLogin; else registerTemplate">
-      <app-login></app-login>
-    </div>
-    <ng-template #registerTemplate>
-      <app-register></app-register>
-    </ng-template>
-    <button (click)="toggleForm()">{{ isLogin ? 'Switch to Register' : 'Switch to Login' }}</button>
-  `,
-  styleUrls: ['./connexion.component.css']
+  templateUrl: './connexion.component.html',
+  styleUrls: ['./connexion.component.css'], // Correction ici
+  // imports: [] // Retirer la section imports
+
+
+
 })
 export class ConnexionComponent {
   isLogin: boolean = true; // Track whether to show login or register
