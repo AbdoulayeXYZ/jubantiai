@@ -23,7 +23,7 @@ h1, h2, h3, h4, h5, h6 {
 /* Styles pour la carte d'inscription */
 .login-card {
   max-width: 400px;
-  margin: 1rem auto;
+  margin: 5rem auto;
   background-color: #1e1e1e;
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
