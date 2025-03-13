@@ -1,0 +1,71 @@
+/* teacher-sidebar.component.css */
+:host {
+    display: block;
+    background-color: #ffffff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid #e0e0e0;
+  }
+  
+  .logo {
+    padding: 0 20px 20px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  
+  .logo h1 {
+    font-size: 32px;
+    font-weight: 700;
+    color: #14b8a6;
+  }
+  
+  .logo span {
+    color: #111;
+  }
+  
+  .menu-section {
+    margin-bottom: 20px;
+  }
+  
+  .menu-section h2 {
+    font-size: 12px;
+    text-transform: uppercase;
+    color: #6b7280;
+    padding: 0 20px;
+    margin-bottom: 10px;
+    letter-spacing: 0.5px;
+  }
+  
+  .menu-item {
+    display: flex;
+    align-items: center;
+    padding: 12px 20px;
+    color: #4b5563;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    cursor: pointer;
+  }
+  
+  .menu-item:hover, .menu-item.active {
+    background-color: #f3f4f6;
+    color: #14b8a6;
+  }
+  
+  .menu-item svg {
+    margin-right: 12px;
+    width: 20px;
+    height: 20px;
+  }
+  
+  .menu-item span {
+    font-size: 14px;
+    font-weight: 500;
+  }
+  
+  .logout {
+    margin-top: auto;
+    padding-top: 20px;
+    border-top: 1px solid #f0f0f0;
+  }
