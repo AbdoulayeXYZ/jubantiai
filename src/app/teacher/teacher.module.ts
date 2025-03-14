@@ -16,7 +16,6 @@ import { PerformnancesComponent } from './components/performnances/performnances
     TeacherComponent,
     TeacherHeaderComponent,
     TeacherSidebarComponent,
-    ManageStudentsComponent,
     ClassroomsComponent,
     ExamsComponent,
     CorrectionsComponent,
