@@ -11,7 +11,6 @@ export class Grade {
     score!: number;
 
     @Column({ type: 'text', nullable: true })
-    @Column({ type: 'int', nullable: true })
     comment?: string;
 
     @Column()

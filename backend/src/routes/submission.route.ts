@@ -45,6 +45,14 @@ const upload = multer({
 const router = express.Router();
 const submissionController = new SubmissionController();
 
+// Add the new route for submission with automatic grading
+router.post(
+    '/:examId/submit-and-grade',
+    authMiddleware,
+    upload.single('file'),
+    submissionController.submitAndGrade
+);
+
 // Apply auth middleware to all routes
 router.use(authMiddleware);
 

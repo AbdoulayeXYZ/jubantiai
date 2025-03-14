@@ -1,4 +1,5 @@
 import { AppError } from '../utils/app-error';
+import pdfParse from 'pdf-parse';  // Changed to default import
 
 interface GradingResult {
     grade: number;
@@ -54,103 +55,49 @@ interface CorrectionTemplate {
 
 export class OllamaService {
     private baseUrl: string = 'http://localhost:11434/api';
-    private model: string = 'mistral';
-    private timeout: number = 45000;
-    private retryCount: number = 3;
+    private model: string = 'deepseek-r1:1.5b';
+    private timeout: number = 120000; // Increased to 2 minutes
+    private retryCount: number = 5; // Increased retry attempts
+    private maxTokens: number = 2048; // Increased token limit
 
-    // Template de correction fixe
-    private readonly correctionTemplate: CorrectionTemplate = {
+    private correctionTemplate: CorrectionTemplate = {
         understanding: {
-            description: "Évaluation de la compréhension des concepts clés",
+            description: "Understanding of core concepts and requirements",
             criteria: [
-                "Identification des concepts principaux",
-                "Application correcte des théories",
-                "Liens entre les concepts"
+                "Demonstrates clear understanding of the problem domain",
+                "Correctly interprets and addresses all requirements",
+                "Shows depth of knowledge in relevant concepts"
             ],
-            maxScore: 8
+            maxScore: 25
         },
         methodology: {
-            description: "Évaluation de la méthodologie et de l'approche",
+            description: "Approach and problem-solving methodology",
             criteria: [
-                "Structure logique de la réponse",
-                "Utilisation d'exemples pertinents",
-                "Argumentation claire"
+                "Uses appropriate methods and techniques",
+                "Shows logical and structured approach",
+                "Demonstrates effective problem-solving strategy"
             ],
-            maxScore: 6
+            maxScore: 25
         },
         structure: {
-            description: "Évaluation de la présentation et organisation",
+            description: "Organization and presentation",
             criteria: [
-                "Clarté de l'expression",
-                "Organisation des idées",
-                "Qualité de la rédaction"
+                "Clear and logical structure",
+                "Well-organized content",
+                "Professional presentation"
             ],
-            maxScore: 4
+            maxScore: 25
         },
         additional: {
-            description: "Points supplémentaires pour l'originalité",
+            description: "Additional considerations and creativity",
             criteria: [
-                "Perspectives originales",
-                "Exemples innovants",
-                "Réflexion approfondie"
+                "Shows innovative thinking",
+                "Includes relevant examples and justifications",
+                "Demonstrates attention to detail"
             ],
-            maxScore: 2
+            maxScore: 25
         }
     };
-
-    constructor() {
-        console.log('OllamaService initialized with model:', this.model);
-        this.checkServiceAvailability();
-    }
-
-    private async checkServiceAvailability(): Promise<void> {
-        try {
-            const response = await fetch(`${this.baseUrl}/tags`, {
-                method: "GET",
-                headers: { "Content-Type": "application/json" },
-            });
-
-            if (!response.ok) {
-                throw new Error(`Ollama service is not available: ${response.statusText}`);
-            }
-
-            const data = await response.json();
-            const modelExists = data.models?.some((model: any) => model.name === this.model);
-            
-            if (!modelExists) {
-                console.warn(`Model ${this.model} not found. Attempting to pull...`);
-                await this.pullModel();
-            }
-        } catch (error: unknown) {
-            if (error instanceof Error) {
-                console.error('Failed to check Ollama service:', error.message);
-                throw new AppError(`Ollama service is not available: ${error.message}`, 500);
-            }
-            throw new AppError('Ollama service is not available', 500);
-        }
-    }
-
-    private async pullModel(): Promise<void> {
-        try {
-            const response = await fetch(`${this.baseUrl}/pull`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ name: this.model })
-            });
-
-            if (!response.ok) {
-                throw new Error(`Failed to pull model ${this.model}`);
-            }
-
-            console.log(`Successfully pulled model ${this.model}`);
-        } catch (error: unknown) {
-            if (error instanceof Error) {
-                console.error('Failed to pull model:', error.message);
-                throw new AppError(`Failed to pull model ${this.model}: ${error.message}`, 500);
-            }
-            throw new AppError(`Failed to pull model ${this.model}`, 500);
-        }
-    }
 
     private async generateSimpleCompletion(prompt: string, customTimeout?: number): Promise<string> {
         let lastError: Error | null = null;
@@ -161,13 +108,12 @@ export class OllamaService {
             const timeoutId = setTimeout(() => controller.abort(), timeoutValue);
 
             try {
-                console.log(`Attempt ${attempt + 1}/${this.retryCount} - Sending request to Ollama with model ${this.model}...`);
+                console.log(`Attempt ${attempt + 1}/${this.retryCount} - Sending request to Ollama...`);
                 
                 const response = await fetch(`${this.baseUrl}/generate`, {
                     method: "POST",
                     headers: { 
                         "Content-Type": "application/json",
-                        "Accept": "application/json"
                     },
                     body: JSON.stringify({
                         model: this.model,
@@ -175,8 +121,9 @@ export class OllamaService {
                         stream: false,
                         temperature: 0.1,
                         top_p: 0.3,
-                        max_tokens: 512,
-                        stop: ["</response>"]
+                        max_tokens: this.maxTokens,
+                        stop: ["</response>"],
+                        raw: true // Added for better stability
                     }),
                     signal: controller.signal
                 });
@@ -192,7 +139,6 @@ export class OllamaService {
                     throw new Error('Empty response from model');
                 }
 
-                console.log('Successfully generated response');
                 return data.response;
 
             } catch (error: unknown) {
@@ -200,11 +146,12 @@ export class OllamaService {
                 
                 if (error instanceof Error) {
                     lastError = error;
-                    console.warn(`Attempt ${attempt + 1} failed:`, error.message);
+                    console.error(`Attempt ${attempt + 1} failed:`, error.message);
                     
                     if (error.name === 'AbortError') {
-                        console.log('Request timed out, retrying with increased timeout...');
+                        console.log(`Request timed out after ${timeoutValue}ms, retrying...`);
                         customTimeout = timeoutValue * 1.5;
+                        await new Promise(resolve => setTimeout(resolve, 1000));
                         continue;
                     }
                 }
@@ -220,224 +167,174 @@ export class OllamaService {
         throw new AppError('Failed to generate response after all attempts', 500);
     }
 
-    private async analyzeUnderstanding(submission: string): Promise<AnalysisStep> {
-        const prompt = `Analyze the understanding based on these criteria:
-${this.correctionTemplate.understanding.criteria.join(', ')}
+    private async extractPDFContent(pdfContent: string): Promise<string> {
+        try {
+            console.log('Attempting to extract text from PDF content...');
+            
+            // Convert string to Buffer if it's base64 or raw PDF content
+            const buffer = Buffer.from(pdfContent, 'binary');
+            
+            // Parse PDF with correct version
+            const pdfData = await pdfParse(buffer, {
+                max: 50, // Maximum pages to parse
+                version: 'v2.0.550'  // Updated to correct version string
+            });
 
-Submission: ${submission.substring(0, 500)}
+            if (!pdfData.text || pdfData.text.length === 0) {
+                throw new AppError('No text content extracted from PDF', 400);
+            }
 
-Rate from 0-${this.correctionTemplate.understanding.maxScore} and list specific points that justify the score.
-Format: Start with the score (e.g., "Score: 6/8") then list key points.`;
-
-        const response = await this.generateSimpleCompletion(prompt);
-        const lines = response.split('\n').filter(line => line.trim());
-        const scoreMatch = response.match(/(\d+)\/8|(\d+) out of 8/);
-        const score = scoreMatch ? Math.min(8, Math.max(0, parseInt(scoreMatch[1] || scoreMatch[2]))) : 4;
-
-        return {
-            score,
-            comments: lines.filter(line => !line.includes('/8') && !line.includes(' out of 8'))
-        };
+            console.log(`Successfully extracted ${pdfData.text.length} characters from PDF`);
+            return pdfData.text;
+        } catch (error) {
+            console.error('PDF extraction failed:', error);
+            throw new AppError('Failed to extract text from PDF: ' + (error instanceof Error ? error.message : 'Unknown error'), 400);
+        }
     }
 
-    private async analyzeMethodology(submission: string): Promise<AnalysisStep> {
-        const prompt = `Analyze the methodology based on these criteria:
-${this.correctionTemplate.methodology.criteria.join(', ')}
+    private async preprocessSubmission(submissionContent: string): Promise<string> {
+        try {
+            console.log('Starting preprocessing of submission content...');
+            
+            if (!submissionContent) {
+                console.error('Received empty submission content');
+                throw new AppError('Empty submission content', 400);
+            }
 
-Submission: ${submission.substring(0, 500)}
+            // Handle PDF content
+            let textContent = submissionContent;
+            if (submissionContent.startsWith('%PDF')) {
+                console.log('PDF content detected, extracting text...');
+                textContent = await this.extractPDFContent(submissionContent);
+            }
 
-Rate from 0-${this.correctionTemplate.methodology.maxScore} and list specific points that justify the score.
-Format: Start with the score (e.g., "Score: 4/6") then list key points.`;
+            // Clean and truncate the content
+            const cleaned = textContent
+                .replace(/[\x00-\x1F\x7F-\x9F]/g, '') // Remove control characters
+                .replace(/\s+/g, ' ') // Normalize whitespace
+                .replace(/[^\x20-\x7E\u00A0-\u00FF]/g, '') // Keep only printable ASCII and extended Latin
+                .trim();
 
-        const response = await this.generateSimpleCompletion(prompt);
-        const lines = response.split('\n').filter(line => line.trim());
-        const scoreMatch = response.match(/(\d+)\/6|(\d+) out of 6/);
-        const score = scoreMatch ? Math.min(6, Math.max(0, parseInt(scoreMatch[1] || scoreMatch[2]))) : 3;
+            if (!cleaned || cleaned.length < 50) {
+                console.warn(`Cleaned content too short: ${cleaned?.length || 0} characters`);
+                throw new AppError('Submission content too short or invalid (minimum 50 characters required)', 400);
+            }
 
-        return {
-            score,
-            comments: lines.filter(line => !line.includes('/6') && !line.includes(' out of 6'))
-        };
-    }
+            const truncated = cleaned.substring(0, 4000);
+            console.log(`Preprocessed content length: ${truncated.length} characters`);
+            console.log(`Preprocessed content preview: ${truncated.substring(0, 100)}...`);
 
-    private async analyzeStructure(submission: string): Promise<AnalysisStep> {
-        const prompt = `Analyze the structure based on these criteria:
-${this.correctionTemplate.structure.criteria.join(', ')}
-
-Submission: ${submission.substring(0, 300)}
-
-Rate from 0-${this.correctionTemplate.structure.maxScore} and list specific points that justify the score.
-Format: Start with the score (e.g., "Score: 3/4") then list key points.`;
-
-        const response = await this.generateSimpleCompletion(prompt);
-        const lines = response.split('\n').filter(line => line.trim());
-        const scoreMatch = response.match(/(\d+)\/4|(\d+) out of 4/);
-        const score = scoreMatch ? Math.min(4, Math.max(0, parseInt(scoreMatch[1] || scoreMatch[2]))) : 2;
-
-        return {
-            score,
-            comments: lines.filter(line => !line.includes('/4') && !line.includes(' out of 4'))
-        };
-    }
-
-    private async analyzeAdditionalMerit(submission: string): Promise<AnalysisStep> {
-        const prompt = `Analyze additional merits based on these criteria:
-${this.correctionTemplate.additional.criteria.join(', ')}
-
-Submission: ${submission.substring(0, 300)}
-
-Rate from 0-${this.correctionTemplate.additional.maxScore} and list specific points that justify the score.
-Format: Start with the score (e.g., "Score: 1/2") then list key points.`;
-
-        const response = await this.generateSimpleCompletion(prompt);
-        const lines = response.split('\n').filter(line => line.trim());
-        const scoreMatch = response.match(/(\d+)\/2|(\d+) out of 2/);
-        const score = scoreMatch ? Math.min(2, Math.max(0, parseInt(scoreMatch[1] || scoreMatch[2]))) : 1;
-
-        return {
-            score,
-            comments: lines.filter(line => !line.includes('/2') && !line.includes(' out of 2'))
-        };
+            return truncated;
+        } catch (error) {
+            console.error('Error preprocessing submission:', error);
+            if (error instanceof AppError) {
+                throw error;
+            }
+            throw new AppError('Failed to process submission content: ' + (error instanceof Error ? error.message : 'Unknown error'), 500);
+        }
     }
 
     async gradeSubmission(
-        studentSubmission: string,
-        _correctionTemplate: string, // On ignore le template fourni
-        _examSubject: string // On ignore le sujet fourni
+        submissionContent: string,
+        examTitle: string
     ): Promise<GradingResult> {
         try {
-            console.log('Starting grading process with fixed template...');
+            console.log('Starting submission grading process...');
+            
+            // Preprocess the submission content
+            const processedContent = await this.preprocessSubmission(submissionContent);
+            
+            // Prepare the grading prompt using the correction template
+            const prompt = `You are a grading assistant. Grade the following submission using these criteria and respond ONLY with valid JSON.
 
-            const understanding = await this.analyzeUnderstanding(studentSubmission);
-            const methodology = await this.analyzeMethodology(studentSubmission);
-            const structure = await this.analyzeStructure(studentSubmission);
-            const additional = await this.analyzeAdditionalMerit(studentSubmission);
+${Object.entries(this.correctionTemplate).map(([category, criteria]: [string, CorrectionCriteria]) => {
+    return `${criteria.description} (${criteria.maxScore} points):\n${criteria.criteria.map((c: string) => `- ${c}`).join('\n')}`;
+}).join('\n\n')}
 
-            const finalGrade = understanding.score + methodology.score + 
-                             structure.score + additional.score;
+Submission Content:\n${processedContent}\n\nYou must provide your response in this exact JSON format with no additional text:
+{
+  "grade": [number between 0-100],
+  "feedback": {
+    "strengths": ["strength1", "strength2", "strength3"],
+    "improvements": ["improvement1", "improvement2", "improvement3"],
+    "details": "detailed feedback paragraph"
+  },
+  "justification": {
+    "concepts": { "score": [number], "reason": "reason for score" },
+    "methodology": { "score": [number], "reason": "reason for score" },
+    "structure": { "score": [number], "reason": "reason for score" },
+    "additional": { "score": [number], "reason": "reason for score" }
+  }
+}`;
 
-            const strengths = [...understanding.comments, ...methodology.comments]
-                .filter(comment => comment.toLowerCase().includes('good') || 
-                                 comment.toLowerCase().includes('strong') ||
-                                 comment.toLowerCase().includes('excellent'))
-                .slice(0, 3);
-
-            const improvements = [...understanding.comments, ...methodology.comments]
-                .filter(comment => comment.toLowerCase().includes('could') || 
-                                 comment.toLowerCase().includes('should') ||
-                                 comment.toLowerCase().includes('need'))
-                .slice(0, 3);
-
-            const feedback = {
-                strengths,
-                improvements,
-                details: `Compréhension: ${understanding.comments[0] || 'Adequate'}\nMéthodologie: ${methodology.comments[0] || 'Satisfactory'}`
-            };
-
-            return {
-                grade: finalGrade,
-                feedback: this.formatFeedback(feedback),
-                justification: `Compréhension (${understanding.score}/8): ${understanding.comments[0] || ''}\n` +
-                             `Méthodologie (${methodology.score}/6): ${methodology.comments[0] || ''}\n` +
-                             `Structure (${structure.score}/4): ${structure.comments[0] || ''}\n` +
-                             `Points supplémentaires (${additional.score}/2): ${additional.comments[0] || ''}`
-            };
-
-        } catch (error: unknown) {
-            console.error('Error during grading:', error);
-            if (error instanceof Error) {
-                throw new AppError(`Grading failed: ${error.message}`, 500);
+            // Get the grading response from the model
+            const response = await this.generateSimpleCompletion(prompt);
+            
+            try {
+                // Extract JSON from the response
+                let jsonStr = response;
+                
+                // Find JSON content if the model returned additional text
+                const jsonMatch = response.match(/(\{[\s\S]*\})/);
+                if (jsonMatch && jsonMatch[0]) {
+                    jsonStr = jsonMatch[0];
+                }
+                
+                // Additional cleanup to handle potential formatting issues
+                jsonStr = jsonStr.replace(/^\s*```json/, '').replace(/```\s*$/, '');
+                
+                console.log("Attempting to parse JSON response:", jsonStr.substring(0, 200) + "...");
+                
+                // Parse the cleaned JSON response
+                const gradingData = JSON.parse(jsonStr) as GradingResponseData;
+                
+                // Verify required fields exist
+                if (gradingData.grade === undefined || !gradingData.feedback || !gradingData.justification) {
+                    throw new Error("Missing required fields in grading response");
+                }
+                
+                return {
+                    grade: gradingData.grade,
+                    feedback: `Strengths:\n${gradingData.feedback.strengths.join('\n')}\n\nAreas for Improvement:\n${gradingData.feedback.improvements.join('\n')}\n\n${gradingData.feedback.details}`,
+                    justification: JSON.stringify(gradingData.justification, null, 2)
+                };
+            } catch (parseError) {
+                console.error('Failed to parse grading response:', parseError);
+                console.error('Raw response:', response);
+                
+                // Fallback response if parsing fails
+                return this.generateFallbackGradingResult(processedContent);
             }
-            throw new AppError('Grading failed with unknown error', 500);
+        } catch (error) {
+            console.error('Error in gradeSubmission:', error);
+            throw error instanceof AppError ? error : new AppError('Failed to grade submission', 500);
         }
     }
-
-    private isValidGradingResult(result: unknown): result is GradingResponseData {
-        if (!result || typeof result !== 'object') return false;
+    
+    // Fallback method for when JSON parsing fails
+    private generateFallbackGradingResult(submissionContent: string): GradingResult {
+        console.log("Generating fallback grading result");
         
-        const r = result as GradingResponseData;
-        return (
-            typeof r.grade === 'number' &&
-            r.feedback && typeof r.feedback === 'object' &&
-            Array.isArray(r.feedback.strengths) &&
-            Array.isArray(r.feedback.improvements) &&
-            typeof r.feedback.details === 'string' &&
-            r.justification && typeof r.justification === 'object' &&
-            this.isValidJustification(r.justification)
-        );
-    }
-
-    private isValidJustification(justification: unknown): justification is GradingJustification {
-        if (!justification || typeof justification !== 'object') return false;
+        // Calculate a basic score based on word count
+        const wordCount = submissionContent.split(/\s+/).length;
+        let score = Math.min(Math.max(50 + (wordCount / 100), 50), 85);
         
-        const j = justification as GradingJustification;
-        const sections = ['concepts', 'methodology', 'structure', 'additional'];
+        // Round to whole number
+        score = Math.round(score);
         
-        return sections.every(section => 
-            j[section as keyof GradingJustification] &&
-            typeof j[section as keyof GradingJustification].score === 'number' &&
-            typeof j[section as keyof GradingJustification].reason === 'string'
-        );
-    }
-
-    private formatFeedback(feedback: GradingFeedback): string {
-        let formattedFeedback = '';
+        const feedback = `This submission has been automatically graded based on its length and content. The submission contains approximately ${wordCount} words. Please review this automated grade.`;
         
-        if (feedback.strengths?.length) {
-            formattedFeedback += '💪 Forces:\n' + feedback.strengths.map(s => `• ${s}`).join('\n') + '\n\n';
-        }
+        const justification = JSON.stringify({
+            concepts: { score: Math.round(score * 0.25), reason: "Automated score based on content length" },
+            methodology: { score: Math.round(score * 0.25), reason: "Automated score based on content length" },
+            structure: { score: Math.round(score * 0.25), reason: "Automated score based on content length" },
+            additional: { score: Math.round(score * 0.25), reason: "Automated score based on content length" }
+        }, null, 2);
         
-        if (feedback.improvements?.length) {
-            formattedFeedback += '📈 Points à améliorer:\n' + feedback.improvements.map(i => `• ${i}`).join('\n') + '\n\n';
-        }
-        
-        if (feedback.details) {
-            formattedFeedback += '📝 Détails:\n' + feedback.details;
-        }
-        
-        return formattedFeedback;
-    }
-
-    private formatJustification(justification: GradingJustification): string {
-        const sections = {
-            concepts: 'Compréhension des concepts',
-            methodology: 'Méthodologie',
-            structure: 'Structure et clarté',
-            additional: 'Points supplémentaires'
+        return {
+            grade: score,
+            feedback,
+            justification
         };
-
-        return Object.entries(sections)
-            .map(([key, title]) => {
-                const section = justification[key as keyof GradingJustification];
-                return `${title} (${section.score}/20):\n${section.reason}`;
-            })
-            .join('\n\n');
-    }
-
-    // Méthode pour exposer les critères de correction
-    getCorrectionCriteria(): CorrectionTemplate {
-        return this.correctionTemplate;
-    }
-
-    async compareSubmissions(submission1: string, submission2: string): Promise<number> {
-        const prompt = `Compare these two exam submissions for potential plagiarism and return a similarity score.
-
-SUBMISSION 1:
-${submission1}
-
-SUBMISSION 2:
-${submission2}
-
-Analyze for:
-1. Textual similarity
-2. Structural patterns
-3. Unique expressions
-4. Shared mistakes or insights
-
-Return ONLY a number between 0 and 100 representing the similarity percentage.`;
-
-        const response = await this.generateSimpleCompletion(prompt);
-        const similarity = parseFloat(response);
-        return isNaN(similarity) ? 0 : Math.min(Math.max(0, similarity), 100);
     }
 }

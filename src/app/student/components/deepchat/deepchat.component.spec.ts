@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { DeekchatComponent } from './deekchat.component';
+import { DeepchatComponent } from './deepchat.component';
 
-describe('DeekchatComponent', () => {
-  let component: DeekchatComponent;
-  let fixture: ComponentFixture<DeekchatComponent>;
+describe('DeepchatComponent', () => {
+  let component: DeepchatComponent;
+  let fixture: ComponentFixture<DeepchatComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [DeekchatComponent]
+      declarations: [DeepchatComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(DeekchatComponent);
+    fixture = TestBed.createComponent(DeepchatComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

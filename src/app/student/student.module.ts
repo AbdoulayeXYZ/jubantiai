@@ -10,7 +10,7 @@ import { ManageExamsComponent } from './components/manage-exams/manage-exams.com
 import { SubmissionsComponent } from './components/submissions/submissions.component';
 import { ClaimsComponent } from './components/claims/claims.component';
 import { PerformancesComponent } from './components/performances/performances.component';
-import { DeekchatComponent } from './components/deekchat/deekchat.component';
+import { DeepchatComponent } from './components/deepchat/deepchat.component';
 
 
 @NgModule({
@@ -22,7 +22,7 @@ import { DeekchatComponent } from './components/deekchat/deekchat.component';
     SubmissionsComponent,
     ClaimsComponent,
     PerformancesComponent,
-    DeekchatComponent,
+    DeepchatComponent,
   ],
   imports: [
     CommonModule,

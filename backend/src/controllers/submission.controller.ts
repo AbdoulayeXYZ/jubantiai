@@ -348,4 +348,38 @@ export class SubmissionController {
             });
         }
     }
+
+    submitAndGrade = async (req: Request, res: Response): Promise<void> => {
+        try {
+            if (!req.user) {
+                res.status(401).json({ message: 'Authentication required' });
+                return;
+            }
+
+            const examId = parseInt(req.params.examId);
+            const studentId = req.user.id;
+
+            if (!req.file) {
+                res.status(400).json({ message: 'No file uploaded' });
+                return;
+            }
+
+            const submission = await this.submissionService.submitAndGrade(
+                studentId,
+                examId,
+                req.file
+            );
+
+            res.status(201).json({
+                message: 'Submission received and graded',
+                submission
+            });
+        } catch (error) {
+            console.error('Error in submitAndGrade:', error);
+            res.status(500).json({
+                message: 'Failed to process submission',
+                error: error instanceof Error ? error.message : 'Unknown error'
+            });
+        }
+    };
 }
