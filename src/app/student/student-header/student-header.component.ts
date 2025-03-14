@@ -4,8 +4,6 @@ import { Component } from '@angular/core';
   selector: 'app-student-header',
   standalone: false,
   templateUrl: './student-header.component.html',
-  styleUrl: './student-header.component.css'
+  styleUrls: ['./student-header.component.css'] // Correction ici
 })
-export class StudentHeaderComponent {
-
-}
+export class StudentHeaderComponent { }
