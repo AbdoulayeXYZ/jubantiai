@@ -20,7 +20,7 @@ import { FormsModule } from '@angular/forms'; // Importez FormsModule
     ClassroomsComponent,
     ExamsComponent,
     CorrectionsComponent,
-    PerformnancesComponent,
+    PerformnancesComponent
   ],
   imports: [
     CommonModule,

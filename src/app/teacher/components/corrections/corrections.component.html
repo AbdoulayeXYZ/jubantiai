@@ -1,1 +1,58 @@
-<p>corrections works!</p>
+<div class="corrections-container">
+    <h2>Corrections</h2>
+  
+    <!-- Liste des classes -->
+    <div class="classroom-list">
+      <div *ngIf="classrooms.length > 0; else noClasses">
+        <div
+          *ngFor="let classroom of classrooms"
+          (click)="selectClassroom(classroom)"
+          class="classroom-item"
+          [class.selected]="classroom === selectedClassroom"
+        >
+          {{ classroom.name }}
+        </div>
+      </div>
+      <ng-template #noClasses>
+        <p>Aucune classe disponible.</p>
+      </ng-template>
+    </div>
+  
+    <!-- Liste des examens de la classe sélectionnée -->
+    <div *ngIf="selectedClassroom; else noClassSelected" class="exams-list">
+      <h3>Examens de {{ selectedClassroom.name }}</h3>
+      <div *ngIf="selectedClassroom.exams.length > 0; else noExams">
+        <div
+          *ngFor="let exam of selectedClassroom.exams"
+          (click)="selectExam(exam)"
+          class="exam-item"
+          [class.selected]="exam === selectedExam"
+        >
+          {{ exam.title }}
+          <span *ngIf="exam.status === 'corrected'">(Corrigé)</span>
+        </div>
+      </div>
+      <ng-template #noExams>
+        <p>Aucun examen disponible pour cette classe.</p>
+      </ng-template>
+    </div>
+    <ng-template #noClassSelected>
+      <p>Sélectionnez une classe pour afficher ses examens.</p>
+    </ng-template>
+  
+    <!-- Bouton pour générer la correction -->
+    <div *ngIf="selectedExam; else noExamSelected" class="generate-correction">
+      <button (click)="generateCorrection()" [disabled]="correctionStatus?.status === 'loading'">
+        {{ correctionStatus?.status === 'loading' ? 'Correction en cours...' : 'Générer la correction' }}
+      </button>
+    </div>
+    <ng-template #noExamSelected>
+      <p>Sélectionnez un examen pour générer la correction.</p>
+    </ng-template>
+  
+    <!-- Statut de la correction -->
+    <div *ngIf="correctionStatus" class="correction-status">
+      <p *ngIf="correctionStatus.status === 'loading'">Correction en cours...</p>
+      <p *ngIf="correctionStatus.status === 'completed'">Correction terminée !</p>
+    </div>
+  </div>
