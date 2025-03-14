@@ -10,6 +10,7 @@ import { ClassroomsComponent } from './components/classrooms/classrooms.componen
 import { ExamsComponent } from './components/exams/exams.component';
 import { CorrectionsComponent } from './components/corrections/corrections.component';
 import { PerformnancesComponent } from './components/performnances/performnances.component';
+import { FormsModule } from '@angular/forms'; // Importez FormsModule
 
 @NgModule({
   declarations: [
@@ -19,12 +20,13 @@ import { PerformnancesComponent } from './components/performnances/performnances
     ClassroomsComponent,
     ExamsComponent,
     CorrectionsComponent,
-    PerformnancesComponent
+    PerformnancesComponent,
   ],
   imports: [
     CommonModule,
     RouterModule,
     TeacherRoutingModule,
-  ]
+    FormsModule, // Ajoutez FormsModule ici
+  ],
 })
-export class TeacherModule { }
+export class TeacherModule {}

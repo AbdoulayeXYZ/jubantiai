@@ -1,1 +1,17 @@
-<p>exams works!</p>
+<div class="exams-container">
+    <h2>Examens</h2>
+    <div class="exam-form">
+      <input [(ngModel)]="newExam.title" placeholder="Titre de l'examen" />
+      <textarea [(ngModel)]="newExam.description" placeholder="Description de l'examen"></textarea>
+      <button (click)="createExam()">Créer un examen</button>
+    </div>
+  
+    <div class="exams-list">
+      <div *ngFor="let exam of exams" class="exam-item">
+        <h3>{{ exam.title }}</h3>
+        <p>{{ exam.description }}</p>
+        <span>Statut : {{ exam.status }}</span>
+        <button (click)="deleteExam(exam.id)">Supprimer</button>
+      </div>
+    </div>
+  </div>
