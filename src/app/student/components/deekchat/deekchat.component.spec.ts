@@ -1,5 +1,5 @@
+// deekchat.component.spec.ts
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { DeekchatComponent } from './deekchat.component';
 
 describe('DeekchatComponent', () => {
@@ -8,10 +8,12 @@ describe('DeekchatComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [DeekchatComponent]
+      declarations: [ DeekchatComponent ]
     })
     .compileComponents();
+  });
 
+  beforeEach(() => {
     fixture = TestBed.createComponent(DeekchatComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

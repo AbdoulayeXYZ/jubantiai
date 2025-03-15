@@ -1,1 +1,19 @@
-<p>deekchat works!</p>
+<!-- deekchat.component.html -->
+<div class="chat-container">
+    <h2>DeepChat</h2>
+    <div class="chat-topics">
+        <h3>Sujets de discussion</h3>
+        <ul>
+            <li *@For="let topic of topics" (click)?="selectTopic(topic)">{{ topic }}</li>
+        </ul>
+    </div>
+    <div class="chat-window">
+        <div *@For="let message of messages" class="chat-message" [ngClass]?="{'bot': message.sender === 'bot', 'user': message.sender === 'user'}">
+            {{ message.text }}
+        </div>
+    </div>
+    <div class="chat-input">
+        <input [(@Model)]?="newMessage" placeholder="Tapez votre message..." (keyup.enter)?="sendMessage()" />
+        <button (click)?="sendMessage()">Envoyer</button>
+    </div>
+</div>

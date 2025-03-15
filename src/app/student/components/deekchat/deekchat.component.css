@@ -1,0 +1,47 @@
+/* deekchat.component.css */
+.chat-container {
+    padding: 20px;
+}
+
+.chat-topics {
+    margin-bottom: 20px;
+}
+
+.chat-topics h3 {
+    margin: 0 0 10px;
+}
+
+.chat-topics ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.chat-topics li {
+    margin-bottom: 10px;
+    cursor: pointer;
+}
+
+.chat-window {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 15px;
+    height: 300px;
+    overflow-y: auto;
+}
+
+.chat-message {
+    margin-bottom: 10px;
+}
+
+.chat-message.bot {
+    color: #555;
+}
+
+.chat-message.user {
+    color: #000;
+    text-align: right;
+}
+
+.chat-input {
+    margin-top: 10px;
+}
