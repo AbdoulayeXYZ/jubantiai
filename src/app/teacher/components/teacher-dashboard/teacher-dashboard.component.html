@@ -1,1 +1,331 @@
-<p>teacher-dashboard works!</p>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <style>
+        /* Style for the fixed row */
+        .fixed-row {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            background-color: #f3f4f6;
+            padding: 0.5rem 0;
+        }
+        
+        /* Container for the scrolling content */
+        .scrollable-container {
+            height: calc(100vh - 120px);
+            overflow-y: auto;
+            padding-top: 0.5rem;
+        }
+        
+        /* Animation for the statistic cards */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.03); }
+            100% { transform: scale(1); }
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateX(-20px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.6s ease-in-out;
+        }
+        
+        .slide-in {
+            animation: slideIn 0.8s ease-out;
+        }
+        
+        .pulse-effect:hover {
+            animation: pulse 1s infinite;
+        }
+        
+        /* Reduce global margins and paddings */
+        body {
+            margin: 0;
+            padding: 0;
+        }
+        
+        /* Reduce text and element sizes */
+        .compact-text {
+            font-size: 0.9rem;
+        }
+        
+        .compact-title {
+            font-size: 1rem;
+        }
+        
+        .compact-number {
+            font-size: 1.5rem;
+        }
+        
+        .compact-icon {
+            padding: 0.5rem;
+            font-size: 0.8rem;
+        }
+        
+        /* Reduced height for progress bars */
+        .compact-progress {
+            height: 4px;
+        }
+        
+        /* Animation for progress bars */
+        .animated-bar {
+            width: 0;
+            transition: width 1.5s ease-in-out;
+        }
+        
+    </style>
+</head>
+<body class="bg-gray-100">
+    <div class="container mx-auto px-2 py-2">
+       
+        <!-- Main Statistics - FIXED -->
+        <div class="fixed-row">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2">
+                <!-- Total Students -->
+                <div class="bg-white rounded-lg shadow-md p-3 flex flex-col justify-between pulse-effect">
+                    <div class="flex justify-between items-center">
+                        <h2 class="text-gray-500 text-sm">Total Students</h2>
+                        <div class="bg-teal-500 p-2 rounded-full">
+                            <i class="fas fa-users text-white text-xs"></i>
+                        </div>
+                    </div>
+                    <div class="mt-1">
+                        <p class="compact-number font-bold">250</p>
+                        <p class="text-gray-500 text-xs">Registered Students</p>
+                    </div>
+                    <div class="mt-1">
+                        <a href="#" class="text-blue-500 hover:text-blue-700 flex items-center text-xs">
+                            View Data <i class="fas fa-arrow-right ml-1"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Classes -->
+                <div class="bg-white rounded-lg shadow-md p-3 flex flex-col justify-between pulse-effect">
+                    <div class="flex justify-between items-center">
+                        <h2 class="text-gray-500 text-sm">Classes</h2>
+                        <div class="bg-gray-500 p-2 rounded-full">
+                            <i class="fas fa-chalkboard text-white text-xs"></i>
+                        </div>
+                    </div>
+                    <div class="mt-1">
+                        <p class="compact-number font-bold">12</p>
+                        <p class="text-gray-500 text-xs">Managed Classes</p>
+                    </div>
+                    <div class="mt-1">
+                        <a href="#" class="text-blue-500 hover:text-blue-700 flex items-center text-xs">
+                            View Data <i class="fas fa-arrow-right ml-1"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Exams -->
+                <div class="bg-white rounded-lg shadow-md p-3 flex flex-col justify-between pulse-effect">
+                    <div class="flex justify-between items-center">
+                        <h2 class="text-gray-500 text-sm">Exams</h2>
+                        <div class="bg-teal-500 p-2 rounded-full">
+                            <i class="fas fa-file-alt text-white text-xs"></i>
+                        </div>
+                    </div>
+                    <div class="mt-1">
+                        <p class="compact-number font-bold">8</p>
+                        <p class="text-gray-500 text-xs">Scheduled Exams</p>
+                    </div>
+                    <div class="mt-1">
+                        <a href="#" class="text-blue-500 hover:text-blue-700 flex items-center text-xs">
+                            View Data <i class="fas fa-arrow-right ml-1"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Corrections -->
+                <div class="bg-white rounded-lg shadow-md p-3 flex flex-col justify-between pulse-effect">
+                    <div class="flex justify-between items-center">
+                        <h2 class="text-gray-500 text-sm">Corrections</h2>
+                        <div class="bg-black p-2 rounded-full">
+                            <i class="fas fa-check-circle text-white text-xs"></i>
+                        </div>
+                    </div>
+                    <div class="mt-1">
+                        <p class="compact-number font-bold">5</p>
+                        <p class="text-gray-500 text-xs">Pending Corrections</p>
+                    </div>
+                    <div class="mt-1">
+                        <a href="#" class="text-blue-500 hover:text-blue-700 flex items-center text-xs">
+                            View Data <i class="fas fa-arrow-right ml-1"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SCROLLING CONTENT -->
+        <div class="scrollable-container">
+            <!-- Additional Indicators -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2 mb-2">
+                <!-- Students in Difficulty -->
+                <div class="bg-white rounded-lg shadow-md p-3 fade-in" style="animation-delay: 0.1s;">
+                    <div class="flex justify-between items-center">
+                        <h2 class="text-gray-700 text-sm">Students in Difficulty</h2>
+                        <div class="bg-red-500 p-2 rounded-full">
+                            <i class="fas fa-exclamation-triangle text-white text-xs"></i>
+                        </div>
+                    </div>
+                    <div class="mt-1" style="height: 40px;"> <!-- Fixed height for all -->
+                        <p class="text-sm">10 students require attention</p>
+                    </div>
+                    <div class="mt-1 w-full bg-red-400 rounded-full compact-progress">
+                        <div class="bg-red-600 compact-progress rounded-full animated-bar" style="width: 0%" data-width="10%"></div>
+                    </div>
+                </div>
+                
+                <!-- Student Progress -->
+                <div class="bg-white rounded-lg shadow-md p-3 fade-in" style="animation-delay: 0.2s;">
+                    <div class="flex justify-between items-center">
+                        <h2 class="text-gray-700 text-sm">Student Progress</h2>
+                        <div class="bg-teal-500 p-2 rounded-full">
+                            <i class="fas fa-chart-line text-white text-xs"></i>
+                        </div>
+                    </div>
+                    <div class="mt-1" style="height: 40px;"> <!-- Fixed height for all -->
+                        <p class="text-sm">12% increase in results</p>
+                    </div>
+                    <div class="mt-1 w-full bg-blue-400 rounded-full compact-progress">
+                        <div class="bg-green-500 compact-progress rounded-full animated-bar" style="width: 0%" data-width="72%"></div>
+                    </div>
+                </div>
+                
+                <!-- Average Grades -->
+                <div class="bg-white rounded-lg shadow-md p-3 fade-in" style="animation-delay: 0.3s;">
+                    <div class="flex justify-between items-center">
+                        <h2 class="text-gray-700 text-sm">Average Grades</h2>
+                        <div class="bg-teal-500 p-2 rounded-full">
+                            <i class="fas fa-star text-white text-xs"></i>
+                        </div>
+                    </div>
+                    <div class="mt-1" style="height: 40px;"> <!-- Fixed height for all -->
+                        <p class="text-sm">Overall average: 14.5/20</p>
+                    </div>
+                    <div class="mt-1 w-full bg-green-400 rounded-full compact-progress">
+                        <div class="bg-green-500 compact-progress rounded-full animated-bar" style="width: 0%" data-width="72.5%"></div>
+                    </div>
+                </div>
+                
+                <!-- Success Rate -->
+                <div class="bg-white rounded-lg shadow-md p-3 fade-in" style="animation-delay: 0.4s;">
+                    <div class="flex justify-between items-center">
+                        <h2 class="text-gray-700 text-sm">Success Rate</h2>
+                        <div class="bg-teal-500 p-2 rounded-full">
+                            <i class="fas fa-chart-pie text-white text-xs"></i>
+                        </div>
+                    </div>
+                    <div class="mt-1" style="height: 40px;"> <!-- Fixed height for all -->
+                        <p class="text-sm">85% of students passed</p>
+                    </div>
+                    <div class="mt-1 w-full bg-yellow-400 rounded-full compact-progress">
+                        <div class="bg-green-400 compact-progress rounded-full animated-bar" style="width: 0%" data-width="85%"></div>
+                    </div>
+                </div>
+            </div>
+            <!-- Other indicators - 2 columns -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-2 mb-2">
+                <!-- Students by Class -->
+                <div class="bg-white rounded-lg shadow-md p-3 slide-in" style="animation-delay: 0.5s;">
+                    <div class="flex justify-between items-center mb-1">
+                        <h2 class="text-sm font-semibold">Students who took the exam</h2>
+                        <div class="bg-gray-500 p-1 rounded-full">
+                            <i class="fas fa-users text-white text-xs"></i>
+                        </div>
+                    </div>
+                    <div class="space-y-2">
+                        <div>
+                            <div class="flex justify-between text-xs">
+                                <p>DIC1</p>
+                                <p>60 students</p>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full compact-progress mt-1">
+                                <div class="bg-green-400 compact-progress rounded-full animated-bar" style="width: 100%" data-width="85%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-xs">
+                                <p>DIC2</p>
+                                <p>35 students</p>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full compact-progress mt-1">
+                                <div class="bg-yellow-400 compact-progress rounded-full animated-bar" style="width: 80%" data-width="75%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-xs">
+                                <p>DIC3</p>
+                                <p>25 students</p>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full compact-progress mt-1">
+                                <div class="bg-blue-400 compact-progress rounded-full animated-bar" style="width: 45%" data-width="65%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Ongoing Exams -->
+                <div class="bg-white rounded-lg shadow-md p-3 slide-in" style="animation-delay: 0.6s;">
+                    <div class="flex justify-between items-center mb-1">
+                        <h2 class="text-sm font-semibold">Ongoing Exams</h2>
+                        <div class="bg-teal-500 p-1 rounded-full">
+                            <i class="fas fa-hourglass-half text-white text-xs"></i>
+                        </div>
+                    </div>
+                    <div class="space-y-2">
+                        <div class="space-y-2">
+                            <div>
+                                <div class="flex justify-between text-xs">
+                                    <p>Database</p>
+                                    
+                                </div>
+                                <div class="w-full bg-gray-200 rounded-full compact-progress mt-1">
+                                    <div class="bg-red-400 compact-progress rounded-full animated-bar" style="width: 58%" data-width="85%"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between text-xs">
+                                    <p>OOP</p>
+                                    
+                                </div>
+                                <div class="w-full bg-gray-200 rounded-full compact-progress mt-1">
+                                    <div class="bg-blue-400 compact-progress rounded-full animated-bar" style="width: 30%" data-width="75%"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between text-xs">
+                                    <p>C Language</p>
+                                    
+                                </div>
+                                <div class="w-full bg-gray-200 rounded-full compact-progress mt-1">
+                                    <div class="bg-yellow-400 compact-progress rounded-full animated-bar" style="width: 15%" data-width="65%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
