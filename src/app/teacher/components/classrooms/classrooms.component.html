@@ -1,1 +1,16 @@
-<p>classrooms works!</p>
+<div class="classrooms-container">
+    <h2>Classrooms</h2>
+    <div class="classroom-list">
+      <div *ngFor="let classroom of classrooms" (click)="selectClassroom(classroom)" class="classroom-item">
+        {{ classroom.name }}
+      </div>
+    </div>
+  
+    <div *ngIf="selectedClassroom" class="exams-list">
+      <h3>Exams for {{ selectedClassroom.name }}</h3>
+      <div *ngFor="let exam of selectedClassroom.exams" class="exam-item">
+        <span>{{ exam.title }}</span>
+        <button *ngIf="exam.status === 'draft'" (click)="publishExam(exam.id)">Publish</button>
+      </div>
+    </div>
+  </div>

@@ -1,1 +1,78 @@
-<p>manage-students works!</p>
+<div class="container">
+    <div class="header">
+      <h1>Manage Students</h1>
+      <div class="actions">
+        <button class="btn-primary">Add Student</button>
+        <button class="btn-secondary">Import</button>
+        <div class="search-container">
+          <input type="text" placeholder="Search students..." class="search-input">
+          <i class="search-icon">🔍</i>
+        </div>
+      </div>
+    </div>
+  
+    <div class="filters">
+      <div class="filter-label">Filter by class:</div>
+      <div class="class-filters">
+        <button class="filter-btn active">Tous</button>
+        <button class="filter-btn">DIC1</button>
+        <button class="filter-btn">DIC2</button>
+        <button class="filter-btn">DIC3</button>
+      </div>
+    </div>
+  
+    <div class="students-table-container">
+      <table class="students-table">
+        <thead>
+          <tr>
+            <th>No</th>
+            <th>Nom</th>
+            <th>Prénom</th>
+            <th>Email</th>
+            <th class="class-column">Classe</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *@If="showEmptyState" class="empty-state">
+            <td colspan="6">
+              <div class="empty-state-content">
+                <div class="empty-icon">📋</div>
+                <p>Aucun étudiant trouvé.</p>
+                <p class="error-message" *@If="showError">Impossible de charger la liste des étudiants. Veuillez réessayer plus tard.</p>
+                <button class="btn-primary" *@If="showError">Réessayer</button>
+              </div>
+            </td>
+          </tr>
+          <tr *@For="let student of dummyStudents">
+            <td>{{ student.id }}</td>
+            <td>{{ student.nom }}</td>
+            <td>{{ student.prenom }}</td>
+            <td>{{ student.email }}</td>
+            <td class="class-column">{{ student.classe }}</td>
+            <td class="actions-cell">
+              <button class="action-btn edit-btn" title="Edit">✏️</button>
+              <button class="action-btn delete-btn" title="Delete">🗑️</button>
+              <button class="action-btn view-btn" title="View Details">👁️</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  
+    <div class="pagination">
+      <button class="pagination-btn" disabled>Previous</button>
+      <div class="page-numbers">
+        <button class="page-number active">1</button>
+        <button class="page-number">2</button>
+        <button class="page-number">3</button>
+      </div>
+      <button class="pagination-btn">Next</button>
+    </div>
+  
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" *@If="isLoading">
+      <div class="spinner"></div>
+      <p>Loading students...</p>
+    </div>
+  </div>

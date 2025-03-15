@@ -1,1 +1,90 @@
-<p>manage-exams works!</p>
+<!-- manage-exams.component.html -->
+<div class="manage-exams-container">
+  <div class="page-header">
+    <h1>Gérer Mes Examens</h1>
+    <p>Consultez tous vos examens programmés et passés.</p>
+  </div>
+
+  <div class="exams-layout">
+    <!-- List of exams -->
+    <div class="exams-list">
+      <h2>Mes Examens</h2>
+      
+      <div class="exams-filter">
+        <input type="text" placeholder="Rechercher un examen..." class="search-input">
+        <select class="filter-select">
+          <option value="all">Tous les examens</option>
+          <option value="scheduled">Programmés</option>
+          <option value="completed">Complétés</option>
+          <option value="missed">Manqués</option>
+        </select>
+      </div>
+      
+      <div class="exams-items">
+        <div *@For="let exam of exams" 
+             class="exam-item" 
+             [@Class]="{'past-exam': exam.isPastDue, 'selected': selectedExam?.id === exam.id}"
+             (click)="showExamDetails(exam)">
+          <div class="exam-header">
+            <h3>{{ exam.title }}</h3>
+            <span class="exam-date">{{ formatDate(exam.date) }}</span>
+          </div>
+          
+          <div class="exam-status" [@Class]="exam.status">
+            {{ exam.status === 'scheduled' ? 'Programmé' : 
+               exam.status === 'completed' ? 'Complété' : 'Manqué' }}
+          </div>
+          
+          <div *@If="exam.score !== undefined" class="exam-score">
+            Score: {{ exam.score }}/{{ exam.maxScore }}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Exam details -->
+    <div *@If="selectedExam" class="exam-details">
+      <h2>Détails de l'Examen</h2>
+      
+      <div class="details-card">
+        <div class="detail-header">
+          <h3>{{ selectedExam?.title }}</h3>
+          <div class="exam-status" [@Class]="selectedExam?.status">
+            {{ selectedExam?.status === 'scheduled' ? 'Programmé' : 
+               selectedExam?.status === 'completed' ? 'Complété' : 'Manqué' }}
+          </div>
+        </div>
+        
+        <div class="detail-info">
+          <p><strong>Date:</strong> {{ formatDate(selectedExam!.date) }}</p>
+          
+          <p *@If="selectedExam.score !== undefined">
+            <strong>Score:</strong> {{ selectedExam?.score }}/{{ selectedExam?.maxScore }}
+          </p>
+          
+          <div class="exam-description">
+            <p><strong>Détails:</strong></p>
+            <p>{{ selectedExam?.details }}</p>
+          </div>
+        </div>
+        
+        <div class="detail-actions">
+          <button *@If="selectedExam.isPastDue" 
+                  class="claim-button"
+                  (click)="redirectToClaims(selectedExam!.id)">
+            Faire une réclamation
+          </button>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Empty state for exam details -->
+    <div *@If="!selectedExam" class="exam-details empty-state">
+      <div class="empty-state-content">
+        <div class="empty-state-icon">📝</div>
+        <h3>Aucun examen sélectionné</h3>
+        <p>Cliquez sur un examen dans la liste pour afficher ses détails.</p>
+      </div>
+    </div>
+  </div>
+</div>
