@@ -1,17 +1,17 @@
 .performances-container {
-    padding: 20px;
-    max-width: 800px;
-    margin: 0 auto;
-    font-family: 'Arial', sans-serif;
-  }
-  
-  .chart-container {
-    width: 100%;
-    height: 400px; /* Ajustez la hauteur selon vos besoins */
-    margin-bottom: 20px; /* Espacement entre les graphiques */
-  }
-  
-  h3 {
-    margin-bottom: 20px;
-    color: #333;
-  }
+  padding: 20px;
+  max-width: 800px;
+  margin: 0 auto;
+  font-family: 'Arial', sans-serif;
+}
+
+.chart-container {
+  width: 100%;
+  height: 400px; /* Ajustez la hauteur selon vos besoins */
+  margin-bottom: 20px; /* Espacement entre les graphiques */
+}
+
+h3 {
+  margin-bottom: 20px;
+  color: #333;
+}

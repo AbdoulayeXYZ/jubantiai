@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Chart, registerables } from 'chart.js';
+import { CommonModule } from '@angular/common';
 
 // Enregistrer les composants de Chart.js
 Chart.register(...registerables);
@@ -13,13 +14,13 @@ Chart.register(...registerables);
 export class PerformancesComponent implements OnInit {
   // Données de démonstration pour les performances des classes
   classPerformanceData = {
-    labels: ['DIC1', 'DIC2', 'DIC3'],
+    labels: ['DIC1', 'DIC2', 'DIC3'], // Noms des classes
     datasets: [
       {
         label: 'Moyenne des scores',
-        data: [75, 85, 90],
-        backgroundColor: ['#2ecc71', '#3498db', '#9b59b6'],
-        borderColor: ['#27ae60', '#2980b9', '#8e44ad'],
+        data: [75, 85, 90], // Moyennes des scores par classe
+        backgroundColor: ['#2ecc71', '#3498db', '#9b59b6'], // Couleurs des barres
+        borderColor: ['#27ae60', '#2980b9', '#8e44ad'], // Couleurs des bordures
         borderWidth: 1,
       },
     ],
@@ -27,14 +28,15 @@ export class PerformancesComponent implements OnInit {
 
   // Données de démonstration pour les performances des étudiants
   studentPerformanceData = {
-    labels: ['Alice', 'Bob', 'Charlie', 'David', 'Eve'],
+    labels: ['Alice', 'Bob', 'Charlie', 'David', 'Eve'], // Noms des étudiants
     datasets: [
       {
         label: 'Score',
-        data: [80, 90, 70, 85, 95],
-        backgroundColor: '#e74c3c',
-        borderColor: '#c0392b',
-        borderWidth: 1,
+        data: [80, 90, 70, 85, 95], // Scores des étudiants
+        backgroundColor: '#e74c3c', // Couleur de la ligne
+        borderColor: '#c0392b', // Couleur de la bordure
+        borderWidth: 2,
+        fill: false, // Ne pas remplir sous la ligne
       },
     ],
   };
@@ -51,13 +53,13 @@ export class PerformancesComponent implements OnInit {
     const ctx = document.getElementById('classPerformanceChart') as HTMLCanvasElement;
     if (ctx) {
       new Chart(ctx, {
-        type: 'bar',
+        type: 'bar', // Type de graphique : barres
         data: this.classPerformanceData,
         options: {
           scales: {
             y: {
               beginAtZero: true,
-              max: 100,
+              max: 100, // Valeur maximale de l'axe Y
             },
           },
         },
@@ -72,13 +74,13 @@ export class PerformancesComponent implements OnInit {
     const ctx = document.getElementById('studentPerformanceChart') as HTMLCanvasElement;
     if (ctx) {
       new Chart(ctx, {
-        type: 'line',
+        type: 'line', // Type de graphique : ligne
         data: this.studentPerformanceData,
         options: {
           scales: {
             y: {
               beginAtZero: true,
-              max: 100,
+              max: 100, // Valeur maximale de l'axe Y
             },
           },
         },

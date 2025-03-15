@@ -3,6 +3,10 @@ import { RouterModule, Routes } from '@angular/router';
 import { StudentComponent } from './student.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { ManageExamsComponent } from './components/manage-exams/manage-exams.component';
+import { ClaimsComponent } from './components/claims/claims.component';
+import { DeekchatComponent } from './components/deekchat/deekchat.component';
+import { PerformancesComponent } from './components/performances/performances.component';
+import { SubmissionsComponent } from './components/submissions/submissions.component';
 
 const routes: Routes = [
   {
@@ -21,6 +25,22 @@ const routes: Routes = [
       {
         path: 'manage-exams',
         component: ManageExamsComponent,
+      },
+      {
+        path: 'claims',
+        component: ClaimsComponent,
+      },
+      {
+        path: 'deekchat',
+        component: DeekchatComponent,
+      },
+      {
+        path: 'performances',
+        component: PerformancesComponent,
+      },
+      {
+        path: 'submissions',
+        component: SubmissionsComponent,
       },
     ],
   },
