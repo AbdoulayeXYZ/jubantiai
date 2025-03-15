@@ -9,7 +9,7 @@ import { ManageStudentsComponent } from './components/manage-students/manage-stu
 import { ClassroomsComponent } from './components/classrooms/classrooms.component';
 import { ExamsComponent } from './components/exams/exams.component';
 import { CorrectionsComponent } from './components/corrections/corrections.component';
-import { PerformnancesComponent } from './components/performnances/performnances.component';
+import { PerformancesComponent } from './components/performances/performances.component';
 import { FormsModule } from '@angular/forms'; // Importez FormsModule
 
 @NgModule({
@@ -20,7 +20,7 @@ import { FormsModule } from '@angular/forms'; // Importez FormsModule
     ClassroomsComponent,
     ExamsComponent,
     CorrectionsComponent,
-    PerformnancesComponent
+    PerformancesComponent
   ],
   imports: [
     CommonModule,
