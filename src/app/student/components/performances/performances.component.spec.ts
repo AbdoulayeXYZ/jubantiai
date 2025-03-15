@@ -1,5 +1,5 @@
+// performances.component.spec.ts
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { PerformancesComponent } from './performances.component';
 
 describe('PerformancesComponent', () => {
@@ -8,10 +8,12 @@ describe('PerformancesComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [PerformancesComponent]
+      declarations: [ PerformancesComponent ]
     })
     .compileComponents();
+  });
 
+  beforeEach(() => {
     fixture = TestBed.createComponent(PerformancesComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

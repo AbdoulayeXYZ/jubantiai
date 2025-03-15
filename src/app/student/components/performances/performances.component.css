@@ -1,0 +1,19 @@
+/* performances.component.css */
+.performances-container {
+    padding: 20px;
+}
+
+.performance-item {
+    margin-bottom: 15px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.performance-item h3 {
+    margin: 0 0 10px;
+}
+
+.performance-item p {
+    margin: 0;
+}

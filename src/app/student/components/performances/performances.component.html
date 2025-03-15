@@ -1,1 +1,9 @@
-<p>performances works!</p>
+<!-- performances.component.html -->
+<div class="performances-container">
+    <h2>Mes Performances</h2>
+    <div *ngFor="let performance of performances" class="performance-item">
+        <h3>{{ performance.examName }}</h3>
+        <p>Note: {{ performance.grade }}</p>
+        <p>Commentaire: {{ performance.comment }}</p>
+    </div>
+</div>
