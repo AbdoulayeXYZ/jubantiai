@@ -6,7 +6,7 @@ import { ManageStudentsComponent } from './components/manage-students/manage-stu
 import { ClassroomsComponent } from './components/classrooms/classrooms.component';
 import { CorrectionsComponent } from './components/corrections/corrections.component';
 import { ExamsComponent } from './components/exams/exams.component';
-import { PerformancesComponent } from '../student/components/performances/performances.component';
+import { PerformancesComponent } from './components/performances/performances.component';
 
 const routes: Routes = [
   {
