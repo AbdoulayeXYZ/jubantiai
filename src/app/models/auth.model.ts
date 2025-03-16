@@ -22,5 +22,8 @@ export interface User {
   type: string;
   id: number;
   email: string;
+  password?: string; // Make password optional since we don't want to store it in localStorage
   role: 'student' | 'teacher';
+  createdAt?: Date;
+  updatedAt?: Date;
 }

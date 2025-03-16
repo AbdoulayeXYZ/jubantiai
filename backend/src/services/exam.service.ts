@@ -1,4 +1,5 @@
 import { ExamModel } from '../models/exam.model';
+import { SubmissionModel } from '../models/submission.model';
 import { ICreateExamDto, IUpdateExamDto, IExamWithSubmissionsCount } from '../interfaces/exam.interface';
 import { NotificationService } from '../notification/notification.service';
 import { OllamaService } from './ollama.service';
@@ -79,7 +80,29 @@ export class ExamService {
             return false;
         }
         
-        return this.examModel.deleteExam(examId);
+        try {
+            // Get all submissions for this exam
+            const submissions = await this.examModel.getExamSubmissionsCount(examId);
+            
+            if (submissions > 0) {
+                // Get the submission model to delete submissions
+                const submissionModel = new SubmissionModel();
+                
+                // Get all submissions for this exam
+                const examSubmissions = await submissionModel.getSubmissionsByExamId(examId);
+                
+                // Delete each submission
+                for (const submission of examSubmissions) {
+                    await submissionModel.delete(submission.id);
+                }
+            }
+            
+            // Now delete the exam
+            return this.examModel.deleteExam(examId);
+        } catch (error) {
+            console.error('Error deleting exam and related submissions:', error);
+            return false;
+        }
     }
 
     async generateCorrectionTemplate(examId: number, teacherId: number): Promise<string | null> {

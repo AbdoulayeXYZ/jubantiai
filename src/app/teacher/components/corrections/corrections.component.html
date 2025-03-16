@@ -1,1 +1,164 @@
-<p>corrections works!</p>
+<div class="corrections-container">
+  <div class="header">
+    <h1>Corrections</h1>
+  </div>
+
+  <div class="alert alert-danger" *ngIf="error">
+    {{ error }}
+    <button class="close-btn" (click)="closeError()">×</button>
+  </div>
+
+  <div class="loading-spinner" *ngIf="loading">
+    <div class="spinner"></div>
+    <p>Loading...</p>
+  </div>
+
+  <div class="content-wrapper" *ngIf="!loading">
+    <!-- Exams Selection -->
+    <div class="exams-section">
+      <h2>Select an Exam</h2>
+      <div class="exams-list" *ngIf="exams.length > 0">
+        <div class="exam-card" *ngFor="let exam of exams" (click)="loadSubmissions(exam.id!)" [class.selected]="selectedExam?.id === exam.id">
+          <h3>{{ exam.title }}</h3>
+          <p class="exam-description">{{ exam.description || 'No description' }}</p>
+          <div class="exam-meta">
+            <span class="exam-status" [class]="'status-' + exam.status">{{ exam.status }}</span>
+            <span class="exam-date">{{ exam.deadline | date:'medium' }}</span>
+          </div>
+          <div class="exam-submissions" *ngIf="exam.submissionsCount !== undefined">
+            <span>{{ exam.submissionsCount }} submissions</span>
+          </div>
+        </div>
+      </div>
+      <div class="no-data" *ngIf="exams.length === 0">
+        <p>No exams available. Create exams first.</p>
+      </div>
+    </div>
+
+    <!-- Submissions List -->
+    <div class="submissions-section" *ngIf="selectedExam && submissions.length > 0">
+      <h2>Submissions for {{ selectedExam.title }}</h2>
+      <div class="submissions-list">
+        <div class="submission-card" *ngFor="let submission of submissions" (click)="loadSubmissionDetails(submission.id)" [class.selected]="selectedSubmission?.id === submission.id">
+          <div class="submission-header">
+            <h3>{{ submission.student?.email || 'Student #' + submission.studentId }}</h3>
+            <span class="submission-status" [class]="getStatusClass(submission.status)">{{ submission.status }}</span>
+          </div>
+          <div class="submission-meta">
+            <span class="submission-date">Submitted: {{ submission.createdAt | date:'medium' }}</span>
+            <span class="submission-late" *ngIf="submission.isLate">Late submission</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="no-data" *ngIf="selectedExam && submissions.length === 0">
+      <p>No submissions for this exam yet.</p>
+    </div>
+
+    <!-- Submission Details -->
+    <div class="submission-details" *ngIf="selectedSubmission">
+      <div class="details-header">
+        <h2>Submission Details</h2>
+        <div class="details-actions">
+          <button class="download-btn" (click)="downloadSubmission(selectedSubmission.filePath)">
+            <i class="fas fa-download"></i> Download
+          </button>
+          <button class="grade-btn" (click)="openGradeForm()">
+            <i class="fas fa-plus"></i> Add Grade
+          </button>
+        </div>
+      </div>
+
+      <div class="submission-info">
+        <div class="info-group">
+          <span class="info-label">Student:</span>
+          <span class="info-value">{{ selectedSubmission.student?.email || 'Unknown' }}</span>
+        </div>
+        <div class="info-group">
+          <span class="info-label">Status:</span>
+          <span class="info-value" [class]="getStatusClass(selectedSubmission.status)">{{ selectedSubmission.status }}</span>
+        </div>
+        <div class="info-group">
+          <span class="info-label">Submitted:</span>
+          <span class="info-value">{{ selectedSubmission.createdAt | date:'medium' }}</span>
+        </div>
+        <div class="info-group" *ngIf="selectedSubmission.isLate">
+          <span class="info-label">Submission Type:</span>
+          <span class="info-value late-tag">Late submission</span>
+        </div>
+      </div>
+
+      <!-- Grades List -->
+      <div class="grades-section">
+        <h3>Grades</h3>
+        <div class="grades-list" *ngIf="grades.length > 0">
+          <div class="grade-card" *ngFor="let grade of grades">
+            <div class="grade-header">
+              <span class="grade-score">{{ grade.score }}/100</span>
+              <div class="grade-actions">
+                <button class="edit-btn" (click)="openGradeForm(grade)">
+                  <i class="fas fa-edit"></i>
+                </button>
+                <button class="validate-btn" *ngIf="!grade.isValidated" (click)="validateGrade(grade.id)">
+                  <i class="fas fa-check"></i> Validate
+                </button>
+                <span class="validated-tag" *ngIf="grade.isValidated">
+                  <i class="fas fa-check-circle"></i> Validated
+                </span>
+              </div>
+            </div>
+            <div class="grade-body">
+              <p class="grade-comment" *ngIf="grade.comment">{{ grade.comment }}</p>
+              <p class="no-comment" *ngIf="!grade.comment">No comment provided</p>
+            </div>
+            <div class="grade-footer">
+              <span class="grade-type" *ngIf="grade.isAutoGenerated">AI Generated</span>
+              <span class="grade-date">{{ grade.createdAt | date:'medium' }}</span>
+            </div>
+          </div>
+        </div>
+        <div class="no-data" *ngIf="grades.length === 0">
+          <p>No grades available for this submission.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Grade Form Modal -->
+  <div class="modal" *ngIf="showGradeForm">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>{{ editingGradeId ? 'Edit Grade' : 'Add Grade' }}</h2>
+        <button class="close-btn" (click)="showGradeForm = false">×</button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="gradeForm" (ngSubmit)="submitGrade()">
+          <div class="form-group">
+            <label for="score">Score (0-100)*</label>
+            <input type="number" id="score" formControlName="score" class="form-control" min="0" max="100">
+            <div class="error-message" *ngIf="gradeForm.get('score')?.invalid && gradeForm.get('score')?.touched">
+              Score is required and must be between 0 and 100.
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="comment">Comment</label>
+            <textarea id="comment" formControlName="comment" class="form-control" rows="4"></textarea>
+          </div>
+
+          <div class="form-group checkbox-group">
+            <label>
+              <input type="checkbox" formControlName="isAutoGenerated">
+              Mark as AI Generated
+            </label>
+          </div>
+
+          <div class="form-actions">
+            <button type="button" class="cancel-btn" (click)="showGradeForm = false">Cancel</button>
+            <button type="submit" class="submit-btn" [disabled]="gradeForm.invalid">{{ editingGradeId ? 'Update' : 'Submit' }}</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

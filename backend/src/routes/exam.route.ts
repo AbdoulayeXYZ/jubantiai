@@ -77,4 +77,7 @@ router.get('/:id/download-subject', examController.downloadExamSubject);
 // Download correction template (teacher only)
 router.get('/:id/download-correction', examController.downloadCorrectionTemplate);
 
+// Update exam status (teacher only)
+router.patch('/:id/status', examController.updateExamStatus);
+
 export default router;
