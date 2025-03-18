@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import { Grade, CreateGradeDto, UpdateGradeDto, GradeSummary } from '../models/grade.model';
 import { environment } from '../environments/environment';
 
@@ -29,7 +29,12 @@ export class GradeService {
 
   // Get grades for a specific exam
   getGradesByExam(examId: number): Observable<Grade[]> {
-    return this.http.get<Grade[]>(`${this.apiUrl}/exam/${examId}`);
+    return this.http.get<any>(`${this.apiUrl}/exam/${examId}`).pipe(
+      map(response => {
+        // Handle both direct array responses and { success: true, data: [...] } format
+        return Array.isArray(response) ? response : (response.data || [])
+      })
+    );
   }
 
   // Update a grade

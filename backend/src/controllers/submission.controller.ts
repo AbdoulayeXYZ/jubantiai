@@ -4,7 +4,7 @@ import { ExamService } from '../services/exam.service';
 import { ICreateSubmissionDto, IUpdateSubmissionDto } from '../interfaces/submission.interface';
 
 export class SubmissionController {
-    private submissionService = new SubmissionService();
+    protected submissionService = new SubmissionService();
     private examService = new ExamService();
 
     // Create a new submission
@@ -70,10 +70,14 @@ export class SubmissionController {
         }
 
         try {
-            const { examId } = req.params;
+            const examId = parseInt(req.params.examId);
+            if (isNaN(examId)) {
+                res.status(400).json({ message: 'Invalid exam ID format' });
+                return;
+            }
             
             // Validate exam exists
-            const exam = await this.examService.getExamById(parseInt(examId));
+            const exam = await this.examService.getExamById(examId);
             if (!exam) {
                 res.status(404).json({ message: 'Exam not found' });
                 return;
@@ -86,7 +90,7 @@ export class SubmissionController {
             }
 
             const submissions = await this.submissionService.getAllSubmissions({ 
-                examId: parseInt(examId) 
+                examId: examId
             });
 
             res.status(200).json(submissions);

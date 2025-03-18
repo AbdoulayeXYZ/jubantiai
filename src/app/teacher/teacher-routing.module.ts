@@ -4,10 +4,9 @@ import { TeacherComponent } from './teacher.component';
 import { TeacherDashboardComponent } from './components/teacher-dashboard/teacher-dashboard.component';
 import { ManageStudentsComponent } from './components/manage-students/manage-students.component';
 import { ClassroomsComponent } from './components/classrooms/classrooms.component';
-import { Exam } from '../../../backend/src/entities/exam.entity';
 import { CorrectionsComponent } from './components/corrections/corrections.component';
-import { PerformancesComponent } from '../student/components/performances/performances.component';
 import { ExamsComponent } from './components/exams/exams.component';
+import { StudentstatsComponent } from './components/studentstats/studentstats.component';
 
 const routes: Routes = [
   {
@@ -40,8 +39,8 @@ const routes: Routes = [
         component: CorrectionsComponent ,
       },
       {
-        path: 'performances',
-        component: PerformancesComponent ,
+        path: 'statistics',
+        component: StudentstatsComponent ,
       }
     ],
   },

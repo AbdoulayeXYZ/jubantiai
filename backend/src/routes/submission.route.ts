@@ -56,6 +56,38 @@ router.post(
 // Apply auth middleware to all routes
 router.use(authMiddleware);
 
+// Get all submissions based on user role
+router.get('/', async (req, res) => {
+    if (!req.user) {
+        res.status(401).json({ message: 'Authentication required' });
+        return;
+    }
+
+    try {
+        const examId = req.query.examId ? parseInt(req.query.examId as string) : undefined;
+        if (req.query.examId && isNaN(examId as number)) {
+            res.status(400).json({ message: 'Invalid exam ID format' });
+            return;
+        }
+
+        if (req.user.role === 'student') {
+            const submissions = await submissionController.getMySubmission(req, res);
+            res.status(200).json(submissions);
+        } else if (req.user.role === 'teacher') {
+            const submissions = await submissionController.getAllForExam(req, res);
+            res.status(200).json(submissions);
+        } else {
+            res.status(403).json({ message: 'Invalid user role' });
+        }
+    } catch (error) {
+        console.error('Error getting submissions:', error);
+        res.status(500).json({ 
+            message: 'Error getting submissions', 
+            error: error instanceof Error ? error.message : 'Unknown error' 
+        });
+    }
+});
+
 // Create a new submission for an exam
 router.post('/exams/:examId/submit', 
     upload.single('file'),
@@ -63,6 +95,16 @@ router.post('/exams/:examId/submit',
 );
 
 // Get all submissions for an exam (teacher only)
+router.get('/exams/:examId/submissions',
+    submissionController.getAllForExam.bind(submissionController)
+);
+
+// Additional routes to match frontend request patterns
+router.get('/:examId/submissions',
+    submissionController.getAllForExam.bind(submissionController)
+);
+
+// Route to match the pattern /api/exams/:examId/submissions
 router.get('/exams/:examId/submissions',
     submissionController.getAllForExam.bind(submissionController)
 );
@@ -79,6 +121,11 @@ router.get('/exams/:examId/my-submission',
 
 // Get a specific submission by ID
 router.get('/submissions/:id',
+    submissionController.getById
+);
+
+// Direct route for accessing a submission by ID (to match frontend pattern)
+router.get('/:id',
     submissionController.getById
 );
 

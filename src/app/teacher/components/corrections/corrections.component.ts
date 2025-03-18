@@ -92,7 +92,7 @@ export class CorrectionsComponent implements OnInit {
 
   downloadSubmission(filePath: string): void {
     this.loading = true;
-    this.submissionService.downloadSubmission(filePath).subscribe({
+    this.submissionService.downloadSubmission(Number(filePath)).subscribe({
       next: (blob) => {
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');

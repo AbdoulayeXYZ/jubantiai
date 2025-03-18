@@ -55,7 +55,7 @@ interface CorrectionTemplate {
 
 export class OllamaService {
     private baseUrl: string = 'http://localhost:11434/api';
-    private model: string = 'deepseek-r1:1.5b';
+    private model: string = 'deepseek-r1:latest';
     private timeout: number = 120000; // Increased to 2 minutes
     private retryCount: number = 5; // Increased retry attempts
     private maxTokens: number = 2048; // Increased token limit

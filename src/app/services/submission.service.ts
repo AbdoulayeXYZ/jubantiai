@@ -12,6 +12,9 @@ export class SubmissionService {
 
   constructor(private http: HttpClient) { }
 
+
+
+
   // Get all submissions with optional filters
   getSubmissions(filters?: SubmissionFilters): Observable<Submission[]> {
     let url = this.apiUrl;
@@ -24,7 +27,8 @@ export class SubmissionService {
       if (queryParams.length > 0) {
         url += `?${queryParams.join('&')}`;
       }
-    }
+    }    
+    console.log('API Request URL:', url);
     return this.http.get<Submission[]>(url);
   }
 
@@ -35,7 +39,7 @@ export class SubmissionService {
 
   // Get submissions for a specific exam
   getSubmissionsByExam(examId: number): Observable<Submission[]> {
-    return this.http.get<Submission[]>(`${this.apiUrl}?examId=${examId}`);
+    return this.http.get<Submission[]>(`${environment.apiUrl}/exams/${examId}/submissions`);
   }
 
   // Update a submission
@@ -44,8 +48,8 @@ export class SubmissionService {
   }
 
   // Download a submission file
-  downloadSubmission(filePath: string): Observable<Blob> {
-    return this.http.get(`${environment.apiUrl}/download?path=${filePath}`, {
+  downloadSubmission(submissionId: number): Observable<Blob> {
+    return this.http.get(`${this.apiUrl}/${submissionId}/download`, {
       responseType: 'blob'
     });
   }

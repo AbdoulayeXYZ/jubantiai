@@ -44,6 +44,8 @@ const startServer = async () => {
     app.use('/api/users', userRoutes);
     app.use('/api/exams', examRoutes);
     app.use('/api/submissions', submissionRoutes);
+    // Add additional route for exam submissions to match frontend pattern
+    app.use('/api/exams', submissionRoutes);
     app.use('/api/grades', gradeRoutes);
     app.use('/api/auth', authRoutes);
 
