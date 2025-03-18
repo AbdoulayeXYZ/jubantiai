@@ -1,185 +1,95 @@
-<!-- submissions.component.html -->
-<div class="submissions-container">
-    <div class="page-header">
-      <h1>Mes Soumissions</h1>
-      <p>Consultez et soumettez vos devoirs et examens.</p>
-    </div>
-  
-    <div class="submissions-layout">
-      <!-- List of submissions -->
-      <div class="submissions-list">
-        <h2>Examens à soumettre</h2>
-        
-        <div class="submissions-filter">
-          <input type="text" placeholder="Rechercher un examen..." class="search-input">
-          <select class="filter-select">
-            <option value="all">Tous les examens</option>
-            <option value="pending">À soumettre</option>
-            <option value="submitted">Soumis</option>
-            <option value="graded">Notés</option>
-          </select>
-        </div>
-        
-        <div class="submissions-items">
-          <div *@For="let submission of submissions" 
-               class="submission-item" 
-               [ngClass]?="{
-                 'overdue': isOverdue(submission.dueDate) && submission.status === 'pending',
-                 'submitted': submission.status === 'submitted' || submission.status === 'graded',
-                 'selected': selectedSubmission?.id === submission.id
-               }"
-               (click)="selectSubmission(submission)">
-            <div class="submission-header">
-              <h3>{{ submission.examTitle }}</h3>
-              <div class="submission-status" [ngClass]?="submission.status">
-                {{ submission.status === 'pending' ? 'À soumettre' : 
-                   submission.status === 'submitted' ? 'Soumis' : 
-                   submission.status === 'late' ? 'En retard' : 'Noté' }}
-              </div>
-            </div>
-            
-            <div class="submission-info">
-              <p class="due-date">
-                <strong>Date limite:</strong> {{ formatDate(submission.dueDate) }}
-              </p>
-              
-              <p *@If="submission.status === 'pending'" 
-                 [ngClass]?="{'warning': isOverdue(submission.dueDate)}">
-                <strong>Temps restant:</strong> {{ getRemainingTime(submission.dueDate) }}
-              </p>
-              
-              <p *@If="submission.submitDate">
-                <strong>Soumis le:</strong> {{ formatDate(submission.submitDate) }}
-              </p>
-              
-              <p *@If="submission.grade !== undefined">
-                <strong>Note:</strong> {{ submission.grade }}/100
-              </p>
-            </div>
+<div class="container mx-auto p-6">
+  <div class="grid md:grid-cols-3 gap-6">
+    <!-- Liste des examens -->
+    <div class="bg-white shadow-md rounded-lg p-5">
+      <h2 class=" font-semibold mb-4">
+        <span class="bg-[#14b8a6] px-2 sm:px-3 py-1 rounded text-white text-sm sm:text-base">Liste des examens</span>
+      </h2>
+      <div class="space-y-4">
+        <div *ngFor="let exam of exams" 
+             class="border-8 cursor-pointer p-3 rounded-md hover:bg-blue-50 transition-colors border border-gray-100 mb-3"
+             [class.bg-blue-100]="selectedExam === exam"
+             (click)="selectExam(exam)">
+          <h3 class=" font-medium">{{ exam.title }}</h3>
+          <div class="text-sm text-gray-600">Code: {{ exam.code }}</div>
+          <div class="text-sm text-red-600 flex items-center mt-1">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            Date limite: {{ exam.deadline }}
           </div>
         </div>
       </div>
-  
-      <!-- Submission details -->
-      <div *@If="selectedSubmission" class="submission-details">
-        <h2>Détails de la soumission</h2>
+    </div>
+    
+    <!-- Détails et soumission -->
+    <div class="md:col-span-2 bg-white rounded-lg shadow-md p-4">
+      <div *ngIf="selectedExam" class="space-y-4">
+        <div class="bg-white shadow-md rounded-lg p-5">
+          <h2 class="text-lg font-semibold mb-4">
+            <span class="bg-[#f97316] px-2 sm:px-3 py-1 rounded text-white text-sm sm:text-base">{{ selectedExam.title }}</span>
+          </h2>
+          <div class="flex flex-wrap gap-2 mt-2">
+            <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">{{ selectedExam.code }}</span>
+            <span class="bg-red-100 text-red-800 text-xs font-medium px-2.5 py-0.5 rounded flex items-center">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              {{ selectedExam.deadline }}
+            </span>
+          </div>
+          <p class="mt-3 text-gray-700">{{ selectedExam.description }}</p>
+        </div>
         
-        <div class="details-card">
-          <div class="detail-header">
-            <h3>{{ selectedSubmission?.examTitle }}</h3>
-            <div class="submission-status" [ngClass]?="selectedSubmission.status">
-              {{ selectedSubmission?.status === 'pending' ? 'À soumettre' : 
-                 selectedSubmission?.status === 'submitted' ? 'Soumis' : 
-                 selectedSubmission?.status === 'late' ? 'En retard' : 'Noté' }}
+        <div>
+          <h3 class="font-medium mb-2">Soumettre votre travail</h3>
+          <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
+            <div *ngIf="!selectedFile">
+              <svg xmlns="http://www.w3.org/2000/svg" class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+              </svg>
+              <p class="mt-2 text-sm text-gray-600">Glissez-déposez votre fichier PDF ici ou</p>
+              <label class="mt-2 inline-block px-4 py-2 bg-[#14b8a6] text-white rounded-md cursor-pointer hover:bg-[#14b8a6] transition-colors">
+                Parcourir
+                <input type="file" accept=".pdf" class="hidden" (change)="onFileSelected($event)">
+              </label>
+           
+            </div>
+            
+            <div *ngIf="selectedFile" class="flex items-center justify-center space-x-2">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-red-500" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z" clip-rule="evenodd" />
+              </svg>
+              <div class="text-left">
+                <p class="font-medium">{{ selectedFile.name }}</p>
+                <p class="text-xs text-gray-500">{{ (selectedFile.size / 1024 / 1024).toFixed(2) }} MB</p>
+              </div>
+              <button class="ml-4 text-red-600 hover:text-red-800" (click)="selectedFile = null">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+                </svg>
+              </button>
             </div>
           </div>
           
-          <div class="detail-info">
-            <p><strong>Date limite:</strong> {{ formatDate(selectedSubmission!.dueDate) }}</p>
-            
-            <p *@If="selectedSubmission.status === 'pending'" 
-               [ngClass]?="{'warning': isOverdue(selectedSubmission.dueDate)}">
-              <strong>Temps restant:</strong> {{ getRemainingTime(selectedSubmission!.dueDate) }}
-            </p>
-            
-            <!-- <p *If="submission.submitDate">
-                <strong>Soumis le:</strong> {{ formatDate(submission.submitDate) }}
-              </p>
-             -->
-            <div *@If="selectedSubmission.fileUrl" class="submitted-file">
-              <p><strong>Fichier soumis:</strong></p>
-              <a href="javascript:void(0)" class="file-link">{{ selectedSubmission?.fileUrl }}</a>
-            </div>
-            
-            <div *@If="selectedSubmission.grade !== undefined" class="grade-info">
-              <p><strong>Note:</strong> {{ selectedSubmission?.grade }}/100</p>
-            </div>
-            
-            <div *@If="selectedSubmission.feedback" class="feedback-info">
-              <p><strong>Feedback:</strong></p>
-              <p class="feedback-text">{{ selectedSubmission?.feedback }}</p>
-            </div>
-          </div>
-          
-          <div class="detail-actions">
-            <button *@If="selectedSubmission.status === 'pending'" 
-                    class="submit-button"
-                    (click)?="openUploadModal(selectedSubmission)">
-              Soumettre mon devoir
-            </button>
-            
-            <button *@If="selectedSubmission.status === 'submitted'" 
-                    class="resubmit-button"
-                    (click)?="openUploadModal(selectedSubmission)">
-              Soumettre à nouveau
+          <div class="mt-4 flex justify-end">
+            <button 
+              [disabled]="!selectedFile" 
+              [class.opacity-50]="!selectedFile"
+              [class.cursor-not-allowed]="!selectedFile"
+              class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors">
+              Soumettre
             </button>
           </div>
         </div>
       </div>
       
-      <!-- Empty state for submission details -->
-      <div *@If="!selectedSubmission" class="submission-details empty-state">
-        <div class="empty-state-content">
-          <div class="empty-state-icon">📝</div>
-          <h3>Aucun examen sélectionné</h3>
-          <p>Cliquez sur un examen dans la liste pour afficher ses détails.</p>
-        </div>
+      <div *ngIf="!selectedExam" class="flex flex-col items-center justify-center h-64 text-gray-500">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        <p class="mt-2">Veuillez sélectionner un examen pour commencer</p>
       </div>
     </div>
   </div>
-  
-  <!-- Upload Modal -->
-  <div *@If="showUploadModal" class="modal-overlay">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h2>Soumettre un devoir</h2>
-        <button class="close-button" (click)="closeUploadModal()">×</button>
-      </div>
-      
-      <div class="modal-body">
-        <p *@If="selectedSubmission">Examen: <strong>{{ selectedSubmission?.examTitle }}</strong></p>
-        <p>Date limite: <strong>{{ selectedSubmission ? formatDate(selectedSubmission.dueDate) : '' }}</strong></p>
-        
-        <div *@If="!uploadSuccess && !uploadError">
-          <form [formGroup]?="uploadForm" (ngSubmit)="submitAssignment()">
-            <div class="file-upload-container">
-              <div class="file-upload-area">
-                <input type="file" 
-                       id="submissionFile" 
-                       (change)="onFileSelect($event)" 
-                       accept="application/pdf"
-                       class="file-input">
-                <label for="submissionFile" class="file-label">
-                  <span class="upload-icon">📄</span>
-                  <span>Cliquez pour sélectionner un fichier PDF</span>
-                  <span class="upload-help">Format accepté: PDF (Max 10MB)</span>
-                </label>
-              </div>
-              
-              <div *@If="uploadForm.get('submissionFile')?.value" class="selected-file">
-                <p>Fichier sélectionné: {{ uploadForm.get('submissionFile')?.value.name }}</p>
-              </div>
-            </div>
-            
-            <div class="modal-actions">
-              <button type="button" class="cancel-button" (click)="closeUploadModal()">Annuler</button>
-              <button type="submit" class="submit-button" [disabled]="!uploadForm.get('submissionFile')?.value || uploading">
-                <span *@If="!uploading">Soumettre</span>
-                <span *@If="uploading">Envoi en cours...</span>
-              </button>
-            </div>
-          </form>
-        </div>
-        
-        <div *@If="uploadSuccess" class="upload-success">
-          <div class="success-icon">✓</div>
-          <p>Votre devoir a été soumis avec succès!</p>
-        </div>
-        
-        <div *@If="uploadError" class="upload-error">
-            <div class="error-icon">✗</div>
-            <p>Une erreur s'est produite lors de l'envoi du fichier. Veuillez réessayer.</p>
-          </div>
-        </div>
-      </div>
-    </div>
+</div>

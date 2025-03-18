@@ -7,5 +7,9 @@ import { Component } from '@angular/core';
   styleUrl: './performances.component.css'
 })
 export class PerformancesComponent {
-
+  performances = [
+    { examName: 'Mathématiques', grade: 85, comment: 'Bon travail' },
+    { examName: 'Physique', grade: 90, comment: 'Excellent' },
+    { examName: 'Chimie', grade: 78, comment: 'Peut mieux faire' },
+  ];
 }

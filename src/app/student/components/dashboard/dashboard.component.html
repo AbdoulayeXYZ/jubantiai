@@ -1,1 +1,289 @@
-<p>dashboard works!</p>
+<!-- Dashboard Component HTML -->
+<div class="bg-gray-100 min-h-screen">
+  <div class="p-4 sm:p-6 max-w-7xl mx-auto">
+    <!-- Première grille pour les 4 cartes -->
+    <div class="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-4 gap-3 sm:gap-6 mb-6">
+      <div class="bg-white shadow-md rounded-lg p-4 sm:p-5 flex flex-col transform transition-transform duration-300 hover:scale-105 cursor-pointer">
+        <div class="flex items-center justify-between">
+          <h2 class="text-base sm:text-lg font-semibold">Manage Exams</h2>
+          <span class="text-green-500 text-xl">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="16" y1="13" x2="8" y2="13"></line>
+              <line x1="16" y1="17" x2="8" y2="17"></line>
+              <polyline points="10 9 9 9 8 9"></polyline>
+            </svg>
+          </span>
+        </div>
+        <p class="text-gray-500 text-xs sm:text-sm mt-2">Gérez vos examens</p>
+        <p class="text-xl sm:text-2xl font-bold mt-4">12</p>
+      </div>
+
+      <div class="bg-white shadow-md rounded-lg p-4 sm:p-5 flex flex-col transform transition-transform duration-300 hover:scale-105">
+        <div class="flex items-center justify-between">
+          <h2 class="text-base sm:text-lg font-semibold">Submissions</h2>
+          <span class="text-teal-400 text-xl">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+              <polyline points="15 3 21 3 21 9"></polyline>
+              <line x1="10" y1="14" x2="21" y2="3"></line>
+            </svg>
+          </span>
+        </div>
+        <p class="text-gray-500 text-xs sm:text-sm mt-2">Suivez les soumissions des utilisateurs</p>
+        <p class="text-xl sm:text-2xl font-bold mt-4">48</p>
+      </div>
+
+      <div class="bg-white shadow-md rounded-lg p-4 sm:p-5 flex flex-col transform transition-transform duration-300 hover:scale-105">
+        <div class="flex items-center justify-between">
+          <h2 class="text-base sm:text-lg font-semibold">Claims</h2>
+          <span class="text-yellow-500 text-xl">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+              <line x1="12" y1="9" x2="12" y2="13"></line>
+              <line x1="12" y1="17" x2="12.01" y2="17"></line>
+            </svg>
+          </span>
+        </div>
+        <p class="text-gray-500 text-xs sm:text-sm mt-2">Gérez les réclamations des utilisateurs</p>
+        <p class="text-xl sm:text-2xl font-bold mt-4">3</p>
+      </div>
+
+      <div class="bg-white shadow-md rounded-lg p-4 sm:p-5 flex flex-col transform transition-transform duration-300 hover:scale-105">
+        <div class="flex items-center justify-between">
+          <h2 class="text-base sm:text-lg font-semibold">Performances</h2>
+          <span class="text-purple-500 text-xl">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="20" x2="18" y2="10"></line>
+              <line x1="12" y1="20" x2="12" y2="4"></line>
+              <line x1="6" y1="20" x2="6" y2="14"></line>
+            </svg>
+          </span>
+        </div>
+        <p class="text-gray-500 text-xs sm:text-sm mt-2">Analysez les performances</p>
+        <p class="text-xl sm:text-2xl font-bold mt-4">87%</p>
+      </div>
+    </div>
+
+    <!-- Deuxième grille pour les listes déroulantes -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 mt-6">
+      <!-- Liste des examens à gauche -->
+      <div class="bg-white shadow-md rounded-lg p-4 sm:p-5">
+        <h2 class="text-base sm:text-lg font-semibold mb-4">
+          <span class="bg-[#f97316] px-2 sm:px-3 py-1 rounded text-white text-sm sm:text-base">Examens complétés</span>
+        </h2>
+        <div class="space-y-2 sm:space-y-3">
+          <div class="border rounded-lg overflow-hidden shadow-sm">
+            <details>
+              <summary class="p-3 sm:p-4 cursor-pointer hover:bg-gray-50 flex justify-between items-center text-sm sm:text-base">
+                <span>Algorithmes Avancés</span>
+              </summary>
+              <div class="p-3 sm:p-4 bg-gray-50">
+                <p class="text-xs sm:text-sm text-gray-600">Complété le: 10 mars 2025</p>
+                <p class="text-xs sm:text-sm text-gray-600">Durée: 03 heures</p>
+                <div class="mt-2">
+                  <a href="#" class="text-blue-600 hover:underline text-xs sm:text-sm">Voir les détails</a>
+                </div>
+              </div>
+            </details>
+          </div>
+          
+          <div class="border rounded-lg overflow-hidden shadow-sm">
+            <details>
+              <summary class="p-3 sm:p-4 cursor-pointer hover:bg-gray-50 flex justify-between items-center text-sm sm:text-base">
+                <span>Programmation Orientée Objet</span>
+              </summary>
+              <div class="p-3 sm:p-4 bg-gray-50">
+                <p class="text-xs sm:text-sm text-gray-600">Complété le: 5 mars 2025</p>
+                <p class="text-xs sm:text-sm text-gray-600">Durée: 02 heures 30 minutes</p>
+                <div class="mt-2">
+                  <a href="#" class="text-blue-600 hover:underline text-xs sm:text-sm">Voir les détails</a>
+                </div>
+              </div>
+            </details>
+          </div>
+          
+          <div class="border rounded-lg overflow-hidden shadow-sm">
+            <details>
+              <summary class="p-3 sm:p-4 cursor-pointer hover:bg-gray-50 flex justify-between items-center text-sm sm:text-base">
+                <span>Bases de Données Avancées</span>
+              </summary>
+              <div class="p-3 sm:p-4 bg-gray-50">
+                <p class="text-xs sm:text-sm text-gray-600">Complété le: 12 mars 2025</p>
+                <p class="text-xs sm:text-sm text-gray-600">Durée: 02 heures 45 minutes</p>
+                <div class="mt-2">
+                  <a href="#" class="text-blue-600 hover:underline text-xs sm:text-sm">Voir les détails</a>
+                </div>
+              </div>
+            </details>
+          </div>
+
+          <div class="border rounded-lg overflow-hidden shadow-sm">
+            <details>
+              <summary class="p-3 sm:p-4 cursor-pointer hover:bg-gray-50 flex justify-between items-center text-sm sm:text-base">
+                <span>Intelligence Artificielle</span>
+              </summary>
+              <div class="p-3 sm:p-4 bg-gray-50">
+                <p class="text-xs sm:text-sm text-gray-600">Complété le: 8 mars 2025</p>
+                <p class="text-xs sm:text-sm text-gray-600">Durée: 03 heures 15 minutes</p>
+                <div class="mt-2">
+                  <a href="#" class="text-blue-600 hover:underline text-xs sm:text-sm">Voir les détails</a>
+                </div>
+              </div>
+            </details>
+          </div>
+
+          <div class="border rounded-lg overflow-hidden shadow-sm">
+            <details>
+              <summary class="p-3 sm:p-4 cursor-pointer hover:bg-gray-50 flex justify-between items-center text-sm sm:text-base">
+                <span>Réseaux et Télécommunications</span>
+              </summary>
+              <div class="p-3 sm:p-4 bg-gray-50">
+                <p class="text-xs sm:text-sm text-gray-600">Complété le: 15 mars 2025</p>
+                <p class="text-xs sm:text-sm text-gray-600">Durée: 02 heures</p>
+                <div class="mt-2">
+                  <a href="#" class="text-blue-600 hover:underline text-xs sm:text-sm">Voir les détails</a>
+                </div>
+              </div>
+            </details>
+          </div>
+
+          <div class="border rounded-lg overflow-hidden shadow-sm">
+            <details>
+              <summary class="p-3 sm:p-4 cursor-pointer hover:bg-gray-50 flex justify-between items-center text-sm sm:text-base">
+                <span>Traitement du Signal</span>
+              </summary>
+              <div class="p-3 sm:p-4 bg-gray-50">
+                <p class="text-xs sm:text-sm text-gray-600">Complété le: 8 mars 2025</p>
+                <p class="text-xs sm:text-sm text-gray-600">Durée: 03 heures 15 minutes</p>
+                <div class="mt-2">
+                  <a href="#" class="text-blue-600 hover:underline text-xs sm:text-sm">Voir les détails</a>
+                </div>
+              </div>
+            </details>
+          </div>
+
+          <div class="border rounded-lg overflow-hidden shadow-sm">
+            <details>
+              <summary class="p-3 sm:p-4 cursor-pointer hover:bg-gray-50 flex justify-between items-center text-sm sm:text-base">
+                <span>Electromagnétisme</span>
+              </summary>
+              <div class="p-3 sm:p-4 bg-gray-50">
+                <p class="text-xs sm:text-sm text-gray-600">Complété le: 15 mars 2025</p>
+                <p class="text-xs sm:text-sm text-gray-600">Durée: 02 heures</p>
+                <div class="mt-2">
+                  <a href="#" class="text-blue-600 hover:underline text-xs sm:text-sm">Voir les détails</a>
+                </div>
+              </div>
+            </details>
+          </div>
+        </div>
+      </div>
+
+      <!-- Liste des réclamations à droite -->
+      <div class="bg-white shadow-md rounded-lg p-4 sm:p-5">
+        <h2 class="text-base sm:text-lg font-semibold mb-4">
+          <span class="bg-[#14b8a6] px-2 sm:px-3 py-1 rounded text-white text-sm sm:text-base">Réclamations</span>
+        </h2>
+        <div class="space-y-2 sm:space-y-3">
+          <div class="border rounded-lg overflow-hidden shadow-sm">
+            <details>
+              <summary class="p-3 sm:p-4 cursor-pointer hover:bg-gray-50 flex justify-between items-center text-sm sm:text-base">
+                <span>Algorithmes Avancés</span>
+                <span class="bg-red-100 text-red-800 text-xs font-medium px-2 py-0.5 rounded">En attente</span>
+              </summary>
+              <div class="p-3 sm:p-4 bg-gray-50">
+                <p class="text-xs sm:text-sm text-gray-600">Soumis le: 10 mars 2025</p>
+                <p class="text-xs sm:text-sm text-gray-600">La question 3 avait plusieurs interprétations possibles.</p>
+                <div class="mt-2">
+                  <a href="#" class="text-blue-600 hover:underline text-xs sm:text-sm">Voir les détails</a>
+                </div>
+              </div>
+            </details>
+          </div>
+       
+          <div class="border rounded-lg overflow-hidden shadow-sm">
+            <details>
+              <summary class="p-3 sm:p-4 cursor-pointer hover:bg-gray-50 flex justify-between items-center text-sm sm:text-base">
+                <span>Intelligence Artificielle</span>
+                <span class="bg-yellow-100 text-yellow-800 text-xs font-medium px-2 py-0.5 rounded">En cours</span>
+              </summary>
+              <div class="p-3 sm:p-4 bg-gray-50">
+                <p class="text-xs sm:text-sm text-gray-600">Soumis le: 9 mars 2025</p>
+                <p class="text-xs sm:text-sm text-gray-600">Le diagramme fourni dans la question 2 était incomplet.</p>
+                <div class="mt-2">
+                  <a href="#" class="text-blue-600 hover:underline text-xs sm:text-sm">Voir les détails</a>
+                </div>
+              </div>
+            </details>
+          </div>
+
+          <div class="border rounded-lg overflow-hidden shadow-sm">
+            <details>
+              <summary class="p-3 sm:p-4 cursor-pointer hover:bg-gray-50 flex justify-between items-center text-sm sm:text-base">
+                <span>Bases de Données Avancées</span>
+                <span class="bg-red-100 text-red-800 text-xs font-medium px-2 py-0.5 rounded">En attente</span>
+              </summary>
+              <div class="p-3 sm:p-4 bg-gray-50">
+                <p class="text-xs sm:text-sm text-gray-600">Soumis le: 13 mars 2025</p>
+                <p class="text-xs sm:text-sm text-gray-600">Ma requête SQL à la question 4 était syntaxiquement correcte.</p>
+                <div class="mt-2">
+                  <a href="#" class="text-blue-600 hover:underline text-xs sm:text-sm">Voir les détails</a>
+                </div>
+              </div>
+            </details>
+          </div>
+
+          <div class="border rounded-lg overflow-hidden shadow-sm">
+            <details>
+              <summary class="p-3 sm:p-4 cursor-pointer hover:bg-gray-50 flex justify-between items-center text-sm sm:text-base">
+                <span>Réseaux et Télécommunications</span>
+                <span class="bg-green-100 text-green-800 text-xs font-medium px-2 py-0.5 rounded">Résolu</span>
+              </summary>
+              <div class="p-3 sm:p-4 bg-gray-50">
+                <p class="text-xs sm:text-sm text-gray-600">Soumis le: 16 mars 2025</p>
+                <p class="text-xs sm:text-sm text-gray-600">Le schéma de configuration réseau que j'ai proposé était valide.</p>
+                <div class="mt-2">
+                  <a href="#" class="text-blue-600 hover:underline text-xs sm:text-sm">Voir les détails</a>
+                </div>
+              </div>
+            </details>
+          </div>
+
+          <div class="border rounded-lg overflow-hidden shadow-sm">
+            <details>
+              <summary class="p-3 sm:p-4 cursor-pointer hover:bg-gray-50 flex justify-between items-center text-sm sm:text-base">
+                <span>Traitement du Signal</span>
+                <span class="bg-green-100 text-green-800 text-xs font-medium px-2 py-0.5 rounded">Résolu</span>
+              </summary>
+              <div class="p-3 sm:p-4 bg-gray-50">
+                <p class="text-xs sm:text-sm text-gray-600">Soumis le: 16 mars 2025</p>
+                <p class="text-xs sm:text-sm text-gray-600">Le schéma de configuration réseau que j'ai proposé était valide.</p>
+                <div class="mt-2">
+                  <a href="#" class="text-blue-600 hover:underline text-xs sm:text-sm">Voir les détails</a>
+                </div>
+              </div>
+            </details>
+          </div>
+
+          <div class="border rounded-lg overflow-hidden shadow-sm">
+            <details>
+              <summary class="p-3 sm:p-4 cursor-pointer hover:bg-gray-50 flex justify-between items-center text-sm sm:text-base">
+                <span>Electromagnétisme</span>
+                <span class="bg-green-100 text-green-800 text-xs font-medium px-2 py-0.5 rounded">Résolu</span>
+              </summary>
+              <div class="p-3 sm:p-4 bg-gray-50">
+                <p class="text-xs sm:text-sm text-gray-600">Soumis le: 16 mars 2025</p>
+                <p class="text-xs sm:text-sm text-gray-600">Le schéma de configuration réseau que j'ai proposé était valide.</p>
+                <div class="mt-2">
+                  <a href="#" class="text-blue-600 hover:underline text-xs sm:text-sm">Voir les détails</a>
+                </div>
+              </div>
+            </details>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

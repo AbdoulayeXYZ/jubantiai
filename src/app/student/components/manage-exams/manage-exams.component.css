@@ -1,215 +1,51 @@
-/* manage-exams.component.css */
-.manage-exams-container {
-  padding: 20px;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+.text-black {
+  color: black !important;
 }
 
-.page-header {
-  margin-bottom: 30px;
+.bg-black {
+  background-color: black !important;
 }
 
-.page-header h1 {
-  margin: 0;
-  color: #333;
-  font-size: 24px;
+.button-hover:hover {
+  background-color: #e5e7eb;
 }
+.no-underline {
+    border-bottom: none !important;
+  }
+  
+  
 
-.page-header p {
-  margin: 5px 0 0;
-  color: #666;
-}
+  .tab-container {
+    display: inline-flex;
+    background-color: #f4f4f4; /* Fond gris clair */
+    border-radius: 8px;
+    padding: 5px;
+    margin-bottom: 15px; /* Ajout d'un espace sous la barre */
+  }
+  
+  .tab {
+    padding: 8px 16px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #6b7280;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+  }
+  
+  .tab:hover,
+  .tab.active {
+    background-color: #81e6d9; /* Couleur de l'onglet actif */
+    color: white;
+    border-radius: 8px;
+    padding: 8px 16px;
+  }
+  
 
-.exams-layout {
-  display: grid;
-  grid-template-columns: 1fr 1.5fr;
-  gap: 20px;
-  height: calc(100vh - 200px);
-}
-
-.exams-list, .exam-details {
-  background: #fff;
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-  padding: 20px;
-  overflow: auto;
-}
-
-.exams-list h2, .exam-details h2 {
-  margin-top: 0;
-  margin-bottom: 20px;
-  font-size: 18px;
-  color: #333;
-}
-
-.exams-filter {
-  display: flex;
-  margin-bottom: 20px;
-  gap: 10px;
-}
-
-.search-input, .filter-select {
-  padding: 8px 12px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  font-size: 14px;
-}
-
-.search-input {
-  flex-grow: 1;
-}
-
-.filter-select {
-  width: 150px;
-}
-
-.exams-items {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.exam-item {
-  padding: 15px;
-  border-radius: 6px;
-  background: #f9f9f9;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  border-left: 4px solid transparent;
-}
-
-.exam-item:hover {
-  background: #f0f0f0;
-}
-
-.exam-item.selected {
-  border-left-color: #009688;
-  background: #e0f2f1;
-}
-
-.exam-item.past-exam {
-  opacity: 0.9;
-}
-
-.exam-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 10px;
-}
-
-.exam-header h3 {
-  margin: 0;
-  font-size: 16px;
-  color: #333;
-}
-
-.exam-date {
-  font-size: 13px;
-  color: #666;
-}
-
-.exam-status {
-  display: inline-block;
-  padding: 4px 10px;
-  font-size: 12px;
-  border-radius: 12px;
-  font-weight: 500;
-  margin-bottom: 5px;
-}
-
-.exam-status.scheduled {
-  background-color: #e3f2fd;
-  color: #1976d2;
-}
-
-.exam-status.completed {
-  background-color: #e8f5e9;
-  color: #2e7d32;
-}
-
-.exam-status.missed {
-  background-color: #ffebee;
-  color: #c62828;
-}
-
-.exam-score {
-  font-size: 14px;
-  color: #555;
-}
-
-.details-card {
-  background: #f9f9f9;
-  border-radius: 8px;
-  padding: 20px;
-}
-
-.detail-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-}
-
-.detail-header h3 {
-  margin: 0;
-  font-size: 18px;
-  color: #333;
-}
-
-.detail-info p {
-  margin: 10px 0;
-  line-height: 1.5;
-}
-
-.exam-description {
-  margin-top: 20px;
-  padding-top: 15px;
-  border-top: 1px solid #eee;
-}
-
-.detail-actions {
-  margin-top: 25px;
-  display: flex;
-  justify-content: flex-end;
-}
-
-.claim-button {
-  background-color: #ff5722;
-  color: white;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 4px;
-  cursor: pointer;
-  font-weight: 500;
-  transition: background-color 0.2s;
-}
-
-.claim-button:hover {
-  background-color: #e64a19;
-}
-
-.empty-state {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.empty-state-content {
-  text-align: center;
-  padding: 30px;
-}
-
-.empty-state-icon {
-  font-size: 48px;
-  margin-bottom: 20px;
-}
-
-.empty-state h3 {
-  margin: 0 0 10px;
-  color: #555;
-}
-
-.empty-state p {
-  margin: 0;
-  color: #777;
-}
+  .tab.active {
+    background-color: #81e6d9;
+    border-radius: 6px;
+    color: white;
+  }
+  

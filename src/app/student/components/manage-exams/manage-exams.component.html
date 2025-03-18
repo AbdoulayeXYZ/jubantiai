@@ -1,90 +1,156 @@
 <!-- manage-exams.component.html -->
-<div class="manage-exams-container">
-  <div class="page-header">
-    <h1>Gérer Mes Examens</h1>
-    <p>Consultez tous vos examens programmés et passés.</p>
+<div class="flex-1 p-6 text-gray-900 min-h-screen">
+
+
+  <div class="tab-container mb-6">
+    <button class="tab active bg-teal-500 text-white px-4 py-2 rounded-l-lg">Tous</button>
+   
   </div>
 
-  <div class="exams-layout">
-    <!-- List of exams -->
-    <div class="exams-list">
-      <h2>Mes Examens</h2>
-      
-      <div class="exams-filter">
-        <input type="text" placeholder="Rechercher un examen..." class="search-input">
-        <select class="filter-select">
-          <option value="all">Tous les examens</option>
-          <option value="scheduled">Programmés</option>
-          <option value="completed">Complétés</option>
-          <option value="missed">Manqués</option>
-        </select>
-      </div>
-      
-      <div class="exams-items">
-        <div *@For="let exam of exams" 
-             class="exam-item" 
-             [@Class]="{'past-exam': exam.isPastDue, 'selected': selectedExam?.id === exam.id}"
-             (click)="showExamDetails(exam)">
-          <div class="exam-header">
-            <h3>{{ exam.title }}</h3>
-            <span class="exam-date">{{ formatDate(exam.date) }}</span>
-          </div>
-          
-          <div class="exam-status" [@Class]="exam.status">
-            {{ exam.status === 'scheduled' ? 'Programmé' : 
-               exam.status === 'completed' ? 'Complété' : 'Manqué' }}
-          </div>
-          
-          <div *@If="exam.score !== undefined" class="exam-score">
-            Score: {{ exam.score }}/{{ exam.maxScore }}
-          </div>
-        </div>
-      </div>
-    </div>
+  <!-- Tableau d'examens -->
+  <div class="overflow-x-auto bg-white rounded-lg shadow">
+    <table class="min-w-full divide-y divide-gray-200">
+      <thead class="bg-gray-50">
+        <tr>
+          <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+            Nom
+          </th>
+          <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+            Description
+          </th>
+          <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+            Date
+          </th>
+          <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+            Deadline
+          </th>
+          <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+            Statut
+          </th>
+          <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+            Actions
+          </th>
+        </tr>
+      </thead>
+      <tbody class="bg-white divide-y divide-gray-200">
+        <!-- Système de Gestion de Base de Données -->
+        <tr>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <div class="text-sm font-medium text-teal-500">Système de Gestion de Base de Données</div>
+          </td>
+          <td class="px-6 py-4">
+            <div class="text-sm text-gray-500">Conception, implémentation et optimisation des bases de données.</div>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <div class="text-sm text-gray-700">16 Mars 2025 - 13:00</div>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <div class="text-sm text-gray-700">16 Mars 2025 - 16:00</div>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
+              Ouvert
+            </span>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+            <div class="flex space-x-2">
+             
+              <button class="bg-blue-600 text-white py-1 px-3 rounded-md hover:bg-blue-700">Commencer</button>
+            </div>
+          </td>
+        </tr>
 
-    <!-- Exam details -->
-    <div *@If="selectedExam" class="exam-details">
-      <h2>Détails de l'Examen</h2>
-      
-      <div class="details-card">
-        <div class="detail-header">
-          <h3>{{ selectedExam?.title }}</h3>
-          <div class="exam-status" [@Class]="selectedExam?.status">
-            {{ selectedExam?.status === 'scheduled' ? 'Programmé' : 
-               selectedExam?.status === 'completed' ? 'Complété' : 'Manqué' }}
-          </div>
-        </div>
-        
-        <div class="detail-info">
-          <p><strong>Date:</strong> {{ formatDate(selectedExam!.date) }}</p>
-          
-          <p *@If="selectedExam.score !== undefined">
-            <strong>Score:</strong> {{ selectedExam?.score }}/{{ selectedExam?.maxScore }}
-          </p>
-          
-          <div class="exam-description">
-            <p><strong>Détails:</strong></p>
-            <p>{{ selectedExam?.details }}</p>
-          </div>
-        </div>
-        
-        <div class="detail-actions">
-          <button *@If="selectedExam.isPastDue" 
-                  class="claim-button"
-                  (click)="redirectToClaims(selectedExam!.id)">
-            Faire une réclamation
-          </button>
-        </div>
-      </div>
-    </div>
-    
-    <!-- Empty state for exam details -->
-    <div *@If="!selectedExam" class="exam-details empty-state">
-      <div class="empty-state-content">
-        <div class="empty-state-icon">📝</div>
-        <h3>Aucun examen sélectionné</h3>
-        <p>Cliquez sur un examen dans la liste pour afficher ses détails.</p>
-      </div>
-    </div>
+        <!-- Introduction à l'IA -->
+        <tr>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <div class="text-sm font-medium text-teal-500">Introduction à l'Intelligence Artificielle</div>
+          </td>
+          <td class="px-6 py-4">
+            <div class="text-sm text-gray-500">Introduction à l'intelligence artificielle et ses applications.</div>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <div class="text-sm text-gray-700">15 Mars 2025 - 10:00</div>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <div class="text-sm text-gray-700">15 Mars 2025 - 12:00</div>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
+              Ouvert
+            </span>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+            <div class="flex space-x-2">
+             
+              <button class="bg-blue-600 text-white py-1 px-3 rounded-md hover:bg-blue-700">Commencer</button>
+            </div>
+          </td>
+        </tr>
+
+        <!-- Algorithmes Avancés -->
+        <tr>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <div class="text-sm font-medium text-teal-500">Algorithmes Avancés</div>
+          </td>
+          <td class="px-6 py-4">
+            <div class="text-sm text-gray-500">Les algorithmes de tri, de recherche et de structures de données avancées.</div>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <div class="text-sm text-gray-700">10 Mars 2025 - 14:00</div>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <div class="text-sm text-gray-700">10 Mars 2025 - 17:00</div>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-400 text-green-800">
+              Fermé
+            </span>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+            <div class="flex space-x-2">
+             
+              <button class="bg-black text-white py-1 px-3 rounded-md hover:bg-gray-900">Réclamer</button>
+            </div>
+          </td>
+        </tr>
+
+        <!-- Programmation Orientée Objet -->
+        <tr>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <div class="text-sm font-medium text-teal-500">Programmation Orientée Objet</div>
+          </td>
+          <td class="px-6 py-4">
+            <div class="text-sm text-gray-500">Évaluation des principes de la POO.</div>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <div class="text-sm text-gray-700">5 Mars 2025 - 09:00</div>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <div class="text-sm text-gray-700">5 Mars 2025 - 11:30</div>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-400 text-green-800">
+              Fermé
+            </span>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+            <div class="flex space-x-2">
+             
+              <button class="bg-black text-white py-1 px-3 rounded-md hover:bg-gray-900">Réclamer</button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Option d'affichage -->
+  <div class="mt-4 flex justify-end">
+    <button class="flex items-center bg-gray-200 px-3 py-2 rounded-md hover:bg-gray-300">
+      <span class="mr-2">Vue Carte</span>
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16" />
+      </svg>
+    </button>
   </div>
 </div>
