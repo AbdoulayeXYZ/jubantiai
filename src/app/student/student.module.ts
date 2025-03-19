@@ -9,7 +9,7 @@ import { RouterModule } from '@angular/router';
 import { ManageExamsComponent } from './components/manage-exams/manage-exams.component';
 import { SubmissionsComponent } from './components/submissions/submissions.component';
 import { ClaimsComponent } from './components/claims/claims.component';
-import { PerformancesComponent } from './components/performances/performances.component';
+import { PerformanceComponent } from './components/performances/performances.component';
 import { DeekchatComponent } from './components/deekchat/deekchat.component';
 
 
@@ -20,8 +20,6 @@ import { DeekchatComponent } from './components/deekchat/deekchat.component';
     StudentSidebarComponent,
     ManageExamsComponent,
     SubmissionsComponent,
-    PerformancesComponent,
- 
   ],
   imports: [
     CommonModule,

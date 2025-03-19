@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from './guards/auth.guard';
 import { HomeComponent } from './portal/components/connexion/connexion.component';
+import { FormsModule } from '@angular/forms';
 
 export const routes: Routes = [
   {
@@ -35,7 +36,9 @@ export const routes: Routes = [
   }
 ];
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(routes),
+    FormsModule,
+  ],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }

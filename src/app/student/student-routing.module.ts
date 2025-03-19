@@ -5,7 +5,7 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { ManageExamsComponent } from './components/manage-exams/manage-exams.component';
 import { ClaimsComponent } from './components/claims/claims.component';
 import { DeekchatComponent } from './components/deekchat/deekchat.component';
-import { PerformancesComponent } from './components/performances/performances.component';
+import { PerformanceComponent } from './components/performances/performances.component';
 import { SubmissionsComponent } from './components/submissions/submissions.component';
 
 const routes: Routes = [
@@ -36,7 +36,7 @@ const routes: Routes = [
       },
       {
         path: 'performances',
-        component: PerformancesComponent,
+        component: PerformanceComponent,
       },
       {
         path: 'submissions',

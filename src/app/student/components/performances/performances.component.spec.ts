@@ -1,20 +1,20 @@
 // performances.component.spec.ts
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { PerformancesComponent } from './performances.component';
+import { PerformanceComponent } from './performances.component';
 
 describe('PerformancesComponent', () => {
-  let component: PerformancesComponent;
-  let fixture: ComponentFixture<PerformancesComponent>;
+  let component: PerformanceComponent;
+  let fixture: ComponentFixture<PerformanceComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ PerformancesComponent ]
+      declarations: [ PerformanceComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(PerformancesComponent);
+    fixture = TestBed.createComponent(PerformanceComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
