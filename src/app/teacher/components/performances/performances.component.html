@@ -1,15 +1,41 @@
+<head><link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet"></head>
 <div class="performances-container">
-
-
-  <!-- Graphique des performances des classes -->
-  <div class="chart-container">
-    <h3>Performances des classes</h3>
-    <canvas id="classPerformanceChart"></canvas>
+  <!-- En-tête de la section -->
+  <div class="performance-header">
+    <p class="subtitle">Analyse comparative des résultats académiques</p>
   </div>
 
-  <!-- Graphique des performances des étudiants -->
-  <div class="chart-container">
-    <h3>Performances des étudiants</h3>
-    <canvas id="studentPerformanceChart"></canvas>
+  <!-- Conteneur des graphiques avec flexbox -->
+  <div class="charts-wrapper">
+    <!-- Graphique des performances des classes -->
+    <div class="chart-card">
+      <div class="chart-container">
+        <canvas id="classPerformanceChart"></canvas>
+      </div>
+    </div>
+
+    <!-- Graphique des performances des étudiants -->
+    <div class="chart-card">
+      <div class="chart-container">
+        <canvas id="studentPerformanceChart"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section d'analyse des données -->
+  <div class="performance-analysis">
+    <div class="summary-card">
+      <h4>Résumé des performances</h4>
+      <p>Moyenne globale: <strong>84%</strong></p>
+      <p>Meilleure classe: <strong>DIC3 (90%)</strong></p>
+      <p>Meilleur étudiant: <strong>Eve (95%)</strong></p>
+    </div>
+    
+    <div class="summary-card">
+      <h4>Tendances</h4>
+      <p>Progression moyenne: <strong>+5%</strong></p>
+      <p>Classes au-dessus de l'objectif: <strong>2/3</strong></p>
+      <p>Étudiants au-dessus de la moyenne: <strong>3/5</strong></p>
+    </div>
   </div>
 </div>

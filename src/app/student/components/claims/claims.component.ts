@@ -24,35 +24,29 @@ interface Exam {
 })
 export class ClaimsComponent implements OnInit {
   claims: Claim[] = [];
-  filteredClaims: Claim[] = [];
   selectedClaim: Claim | null = null;
   showNewClaimForm: boolean = false;
-  claimForm: FormGroup;
-  
+  showResponseModal: boolean = false;
+  selectedExam: number | null = null;
+  claimType: string = '';
+  claimDescription: string = '';
+  selectedFile: File | null = null;
+
   exams: Exam[] = [
     { id: 1, title: 'Programming Fundamentals' },
     { id: 2, title: 'Data Structures' },
     { id: 3, title: 'Web Development' },
     { id: 4, title: 'Database Design' }
   ];
-  
-  filterStatus: string = 'all';
-  
-  constructor(private fb: FormBuilder) {
-    this.claimForm = this.fb.group({
-      examId: ['', Validators.required],
-      reason: ['', Validators.required],
-      description: ['', [Validators.required, Validators.minLength(10)]],
-    });
-  }
+
+  constructor(private fb: FormBuilder) {}
 
   ngOnInit(): void {
     this.loadClaims();
-    this.filterClaims();
   }
 
   loadClaims(): void {
-    // Simulating API data
+    // Simuler des données d'API
     this.claims = [
       {
         id: 1,
@@ -61,7 +55,7 @@ export class ClaimsComponent implements OnInit {
         submissionDate: '2025-03-12',
         status: 'Under Review',
         reason: 'Grading Error',
-        description: 'I believe there was an error in grading my CSS implementation. The requirements were met but points were deducted.'
+        description: 'I believe there was an error in grading my CSS implementation.'
       },
       {
         id: 2,
@@ -70,32 +64,47 @@ export class ClaimsComponent implements OnInit {
         submissionDate: '2025-03-07',
         status: 'Resolved',
         reason: 'Technical Issue',
-        description: 'During the exam, the database server was down for 10 minutes which prevented me from completing the last question.',
-        response: 'Claim approved. 10 points have been added to your final score.'
+        description: 'The database server was down for 10 minutes.',
+        response: 'Claim approved. 10 points added to your score.'
       }
     ];
   }
 
-  filterClaims(): void {
-    if (this.filterStatus === 'all') {
-      this.filteredClaims = [...this.claims];
-    } else {
-      this.filteredClaims = this.claims.filter(claim => 
-        claim.status.toLowerCase().replace(' ', '-') === this.filterStatus);
+  onFileSelected(event: any): void {
+    this.selectedFile = event.target.files[0];
+  }
+
+  isFormValid(): boolean {
+    return !!this.selectedExam && !!this.claimType && this.claimDescription.length >= 10;
+  }
+
+  submitClaim(): void {
+    if (this.isFormValid()) {
+      const newClaim: Claim = {
+        id: this.claims.length + 1,
+        examId: this.selectedExam!,
+        examTitle: this.exams.find(e => e.id === this.selectedExam)?.title || 'Unknown Exam',
+        submissionDate: new Date().toISOString().split('T')[0],
+        status: 'Pending',
+        reason: this.claimType,
+        description: this.claimDescription
+      };
+      this.claims.unshift(newClaim);
+      this.closeNewClaimForm();
     }
   }
 
-  onFilterChange(status: string): void {
-    this.filterStatus = status;
-    this.filterClaims();
+  cancelClaim(claimId: number): void {
+    this.claims = this.claims.filter(claim => claim.id !== claimId);
   }
 
-  viewClaimDetails(claim: Claim): void {
-    this.selectedClaim = claim;
+  viewResponse(claimId: number): void {
+    this.selectedClaim = this.claims.find(claim => claim.id === claimId) || null;
+    this.showResponseModal = true;
   }
 
-  closeClaimDetails(): void {
-    this.selectedClaim = null;
+  closeResponseModal(): void {
+    this.showResponseModal = false;
   }
 
   openNewClaimForm(): void {
@@ -104,33 +113,18 @@ export class ClaimsComponent implements OnInit {
 
   closeNewClaimForm(): void {
     this.showNewClaimForm = false;
-    this.claimForm.reset();
+    this.selectedExam = null;
+    this.claimType = '';
+    this.claimDescription = '';
+    this.selectedFile = null;
   }
 
-  getExamTitle(examId: number): string {
-    const exam = this.exams.find(e => e.id === examId);
-    return exam ? exam.title : 'Unknown Exam';
-  }
-
-  submitClaim(): void {
-    if (this.claimForm.valid) {
-      const formValue = this.claimForm.value;
-      const newClaim: Claim = {
-        id: this.claims.length + 1,
-        examId: formValue.examId,
-        examTitle: this.getExamTitle(formValue.examId),
-        submissionDate: new Date().toISOString().split('T')[0],
-        status: 'Pending',
-        reason: formValue.reason,
-        description: formValue.description
-      };
-      
-      this.claims.unshift(newClaim);
-      this.filterClaims();
-      this.closeNewClaimForm();
-      
-      // In a real app, you would send this to an API
-      console.log('Submitting claim:', newClaim);
+  getStatusClass(status: string): string {
+    switch (status) {
+      case 'Pending': return 'status-pending';
+      case 'Under Review': return 'status-under-review';
+      case 'Resolved': return 'status-resolved';
+      default: return '';
     }
   }
 }

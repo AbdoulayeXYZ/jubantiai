@@ -1,93 +1,94 @@
 <div class="claims-container">
-    <h2 class="claims-title">Mes Réclamations</h2>
-    <p class="claims-description">Déposez une réclamation concernant un de vos examens.</p>
-  
-    <div class="claims-form-container">
-      <!-- Form to submit a new claim -->
-      <div class="new-claim-form">
-        <h3>Nouvelle réclamation</h3>
-        
-        <div class="form-group">
-          <label for="examSelect">Sélectionnez un examen</label>
-          <select id="examSelect" [(ngModel)]?="selectedExam" class="form-control">
-            <option value="">-- Choisir un examen --</option>
-            <!-- <option *ngFor="let exam of userExams" [value]="exam.id">{{ exam.title }} ({{ exam.date | date:'dd/MM/yyyy' }})</option> -->
-          </select>
-        </div>
-        
-        <div class="form-group">
-          <label for="claimType">Type de réclamation</label>
-          <select id="claimType" [(ngModel)]?="claimType" class="form-control">
-            <option value="">-- Choisir le type --</option>
-            <option value="note">Contestation de note</option>
-            <option value="technical">Problème technique</option>
-            <option value="other">Autre</option>
-          </select>
-        </div>
-        
-        <div class="form-group">
-          <label for="claimDescription">Description de la réclamation</label>
-          <textarea id="claimDescription" [(ngModel)]?="claimDescription" rows="5" class="form-control" placeholder="Décrivez votre réclamation en détail..."></textarea>
-        </div>
-        
-        <div class="form-group">
-          <label for="fileUpload">Pièces justificatives (optionnel)</label>
-          <input type="file" id="fileUpload" (change)?="onFileSelected($event)" class="form-control-file">
-          <small class="form-text text-muted">Formats acceptés: PDF, JPG, PNG (max 5MB)</small>
-        </div>
-        
-        <button (click)="submitClaim()" class="btn-primary submit-btn" [disabled]?="!isFormValid()">
-          Soumettre la réclamation
-        </button>
+  <h2 class="claims-title">Mes Réclamations</h2>
+  <p class="claims-description">Déposez une réclamation concernant un de vos examens.</p>
+
+  <!-- Formulaire pour soumettre une nouvelle réclamation -->
+  <div class="claims-form-container" *@If="showNewClaimForm">
+    <div class="new-claim-form">
+      <h3>Nouvelle réclamation</h3>
+
+      <div class="form-group">
+        <label for="examSelect">Sélectionnez un examen</label>
+        <select id="examSelect" [(ngModel)]?="selectedExam" class="form-control">
+          <option value="">-- Choisir un examen --</option>
+          <option *@gFor="let exam of exams" [value]="exam.id">{{ exam.title }}</option>
+        </select>
       </div>
+
+      <div class="form-group">
+        <label for="claimType">Type de réclamation</label>
+        <select id="claimType" [(ngModel)]?="claimType" class="form-control">
+          <option value="">-- Choisir le type --</option>
+          <option value="note">Contestation de note</option>
+          <option value="technical">Problème technique</option>
+          <option value="other">Autre</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="claimDescription">Description de la réclamation</label>
+        <textarea id="claimDescription" [(ngModel)]?="claimDescription" rows="5" class="form-control" placeholder="Décrivez votre réclamation en détail..."></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="fileUpload">Pièces justificatives (optionnel)</label>
+        <input type="file" id="fileUpload" (change)="onFileSelected($event)" class="form-control-file">
+        <small class="form-text text-muted">Formats acceptés: PDF, JPG, PNG (max 5MB)</small>
+      </div>
+
+      <button (click)="submitClaim()" class="btn-primary submit-btn" [disabled]="!isFormValid()">
+        Soumettre la réclamation
+      </button>
+      <button (click)="closeNewClaimForm()" class="btn-secondary">Annuler</button>
     </div>
-  
-    <!-- List of existing claims -->
-    <div class="existing-claims">
-      <h3>Mes réclamations précédentes</h3>
-      
-      <div *@If="userClaims.length === 0" class="no-claims-message">
-        Vous n'avez pas encore déposé de réclamation.
-      </div>
-      
-      <div *@If="userClaims.length > 0" class="claims-list">
-        <div *@For="let claim of userClaims" class="claim-item">
-          <div class="claim-header">
-            <h4>{{ claim.examTitle }}</h4>
-            <!-- <span class="claim-date">{{ claim.submissionDate | date:'dd/MM/yyyy' }}</span> -->
-            <!-- <span class="claim-status" [ngClass]?="getStatusClass(claim.status)">{{ getStatusLabel(claim.status) }}</span> -->
-          </div>
-          <div class="claim-body">
-            <!-- <p><strong>Type:</strong> {{ getClaimTypeLabel(claim.type) }}</p> -->
-            <p><strong>Description:</strong> {{ claim.description }}</p>
-          </div>
-          <div class="claim-footer">
-            <button *@If="claim.status === 'open'" (click)?="cancelClaim(claim.id)" class="btn-secondary">Annuler</button>
-            <button *n@If="claim.status === 'responded'" (click)?="viewResponse(claim.id)" class="btn-info">Voir la réponse</button>
-          </div>
+  </div>
+
+  <!-- Liste des réclamations existantes -->
+  <div class="existing-claims">
+    <h3>Mes réclamations précédentes</h3>
+
+    <div *@If="claims.length === 0" class="no-claims-message">
+      Vous n'avez pas encore déposé de réclamation.
+    </div>
+
+    <div *@If="claims.length > 0" class="claims-list">
+      <div *@For="let claim of claims" class="claim-item">
+        <div class="claim-header">
+          <h4>{{ claim.examTitle }}</h4>
+          <span class="claim-date">{{ claim.submissionDate }}</span>
+          <span class="claim-status" [ngClass]?="getStatusClass(claim.status)">{{ claim.status }}</span>
+        </div>
+        <div class="claim-body">
+          <p><strong>Type:</strong> {{ claim.reason }}</p>
+          <p><strong>Description:</strong> {{ claim.description }}</p>
+        </div>
+        <div class="claim-footer">
+          <button *@If="claim.status === 'Pending'" (click)="cancelClaim(claim.id)" class="btn-secondary">Annuler</button>
+          <button *@If="claim.status === 'Resolved'" (click)="viewResponse(claim.id)" class="btn-info">Voir la réponse</button>
         </div>
       </div>
     </div>
   </div>
-  
-  <!-- Response modal -->
-  <div class="modal" *@If="showResponseModal">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4>Réponse à votre réclamation</h4>
-        <button (click)?="closeResponseModal()" class="close-btn">&times;</button>
-      </div>
-      <div class="modal-body">
-        <p><strong>Examen:</strong> {{ selectedClaim?.examTitle }}</p>
-        <!-- <p><strong>Date de réclamation:</strong> {{ selectedClaim?.submissionDate | date:'dd/MM/yyyy' }}</p> -->
-        <p><strong>Votre réclamation:</strong> {{ selectedClaim?.description }}</p>
-        <div class="response-section">
-          <h5>Réponse de l'enseignant:</h5>
-          <p>{{ selectedClaim?.response }}</p>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button (click)?="closeResponseModal()" class="btn-primary">Fermer</button>
+</div>
+
+<!-- Modal pour afficher la réponse -->
+<div class="modal" *@If="showResponseModal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h4>Réponse à votre réclamation</h4>
+      <button (click)="closeResponseModal()" class="close-btn">&times;</button>
+    </div>
+    <div class="modal-body">
+      <p><strong>Examen:</strong> {{ selectedClaim?.examTitle }}</p>
+      <p><strong>Date de réclamation:</strong> {{ selectedClaim?.submissionDate }}</p>
+      <p><strong>Votre réclamation:</strong> {{ selectedClaim?.description }}</p>
+      <div class="response-section">
+        <h5>Réponse de l'enseignant:</h5>
+        <p>{{ selectedClaim?.response }}</p>
       </div>
     </div>
+    <div class="modal-footer">
+      <button (click)="closeResponseModal()" class="btn-primary">Fermer</button>
+    </div>
   </div>
+</div>
