@@ -4,7 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { BaseChartDirective } from 'ng2-charts';
 import { SubmissionService } from '../../../services/submission.service';
 import { GradeService } from '../../../services/grade.service';
-import { Submission, SubmissionWithDetails } from '../../../models/submission.model';
+import { AuthService } from '../../../services/auth.service';
+import { Submission, SubmissionWithDetails, SubmissionFilters } from '../../../models/submission.model';
 import { Grade, GradeSummary } from '../../../models/grade.model';
 import { ChartConfiguration, ChartData, ChartType } from 'chart.js';
 
@@ -96,7 +97,8 @@ export class PerformancesComponent implements OnInit {
 
   constructor(
     private submissionService: SubmissionService,
-    private gradeService: GradeService
+    private gradeService: GradeService,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -105,21 +107,39 @@ export class PerformancesComponent implements OnInit {
 
   loadStudentSubmissions(): void {
     this.loading = true;
-    this.submissionService.getSubmissions().subscribe({
+    const currentUser = this.authService.getCurrentUser();
+    
+    if (!currentUser) {
+      this.error = 'Utilisateur non authentifié';
+      this.loading = false;
+      return;
+    }
+    
+    const filters: SubmissionFilters = {
+      studentId: currentUser.id
+    };
+    
+    this.submissionService.getSubmissions(filters).subscribe({
       next: (data) => {
         this.submissions = data;
         this.loadGrades();
       },
       error: (err) => {
-        this.error = 'Failed to load submissions';
+        this.error = err.message || 'Échec du chargement des soumissions. Veuillez vérifier que le serveur backend est en cours d\'exécution.';
         this.loading = false;
-        console.error(err);
+        console.error('Erreur lors du chargement des soumissions:', err);
       }
     });
   }
 
   loadGrades(): void {
-    if (this.submissions.length === 0) {
+    // Ensure submissions is an array
+    if (!Array.isArray(this.submissions)) {
+      console.error('Submissions is not an array:', this.submissions);
+      this.submissions = Array.isArray(this.submissions) ? this.submissions : [this.submissions].filter(Boolean);
+    }
+    
+    if (!this.submissions || this.submissions.length === 0) {
       this.loading = false;
       return;
     }

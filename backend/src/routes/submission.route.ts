@@ -71,10 +71,16 @@ router.get('/', async (req, res) => {
         }
 
         if (req.user.role === 'student') {
-            const submissions = await submissionController.getMySubmission(req, res);
+            // Modifié pour ne pas envoyer de réponse dans le contrôleur
+            const filters = { studentId: req.user.id };
+            if (examId) (filters as any).examId = examId;
+            const submissions = await submissionController.submissionService.getAllSubmissions(filters);
             res.status(200).json(submissions);
         } else if (req.user.role === 'teacher') {
-            const submissions = await submissionController.getAllForExam(req, res);
+            // Modifié pour ne pas envoyer de réponse dans le contrôleur
+            const filters = {};
+            if (examId) (filters as any).examId = examId;
+            const submissions = await submissionController.submissionService.getAllSubmissions(filters);
             res.status(200).json(submissions);
         } else {
             res.status(403).json({ message: 'Invalid user role' });

@@ -4,7 +4,7 @@ import { ExamService } from '../services/exam.service';
 import { ICreateSubmissionDto, IUpdateSubmissionDto } from '../interfaces/submission.interface';
 
 export class SubmissionController {
-    protected submissionService = new SubmissionService();
+    public submissionService = new SubmissionService();
     private examService = new ExamService();
 
     // Create a new submission

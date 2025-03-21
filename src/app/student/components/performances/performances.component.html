@@ -10,7 +10,16 @@
   </div>
 
   <div *ngIf="error" class="error-message">
-    <p>{{ error }}</p>
+    <div class="error-icon">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg>
+    </div>
+    <div class="error-content">
+      <h3>Erreur de connexion</h3>
+      <p>{{ error }}</p>
+      <button (click)="loadStudentSubmissions()" class="retry-button">Réessayer</button>
+    </div>
   </div>
 
   <div *ngIf="!loading && !error" class="content-container">
