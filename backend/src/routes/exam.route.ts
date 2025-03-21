@@ -4,6 +4,7 @@ import { authMiddleware } from '../middleware/auth.middleware';
 import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
+import { SubmissionController } from '../controllers/submission.controller';
 
 // Configure storage for exam files
 const storage = multer.diskStorage({
@@ -79,5 +80,51 @@ router.get('/:id/download-correction', examController.downloadCorrectionTemplate
 
 // Update exam status (teacher only)
 router.patch('/:id/status', examController.updateExamStatus);
+
+// Configure storage for submission files
+const submissionStorage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        const uploadDir = path.join(__dirname, '../../uploads/submissions');
+        
+        // Create directory if it doesn't exist
+        if (!fs.existsSync(uploadDir)) {
+            fs.mkdirSync(uploadDir, { recursive: true });
+        }
+        
+        cb(null, uploadDir);
+    },
+    filename: (req, file, cb) => {
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+        const extension = path.extname(file.originalname);
+        cb(null, `submission-${uniqueSuffix}${extension}`);
+    }
+});
+
+const submissionFileFilter = (req: Express.Request, file: Express.Multer.File, cb: multer.FileFilterCallback) => {
+    // Accept PDF files
+    if (file.mimetype === 'application/pdf') {
+        cb(null, true);
+    } else {
+        cb(new Error('Only PDF files are allowed'));
+    }
+};
+
+const submissionUpload = multer({ 
+    storage: submissionStorage,
+    fileFilter: submissionFileFilter,
+    limits: {
+        fileSize: 10 * 1024 * 1024 // 10 MB max file size
+    }
+});
+
+const submissionController = new SubmissionController();
+
+// Add the route for submission with automatic grading
+router.post(
+    '/:examId/submit-and-grade',
+    authMiddleware,
+    submissionUpload.single('file'),
+    submissionController.submitAndGrade
+);
 
 export default router;

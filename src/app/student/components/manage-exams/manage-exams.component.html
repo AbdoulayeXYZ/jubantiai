@@ -1,1 +1,141 @@
-<p>manage-exams works!</p>
+<div class="exams-container">
+  <div class="exams-header">
+    <h1>Mes Examens</h1>
+    <p>Consultez et gérez vos examens disponibles</p>
+  </div>
+
+  <div class="exams-content">
+    <!-- Loader -->
+    <div *ngIf="loading" class="loader-container">
+      <div class="loader"></div>
+      <p>Chargement des examens...</p>
+    </div>
+
+    <!-- Error message -->
+    <div *ngIf="error" class="error-message">
+      <p>{{ error }}</p>
+      <button (click)="loadExams()" class="btn-retry">Réessayer</button>
+    </div>
+
+    <!-- Exams table -->
+    <div *ngIf="!loading && !error && exams.length > 0" class="exams-table-container">
+      <table class="exams-table">
+        <thead>
+          <tr>
+            <th>Titre</th>
+            <th>Description</th>
+            <th>Date limite</th>
+            <th>Statut</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let exam of exams">
+            <td>{{ exam.title }}</td>
+            <td>{{ exam.description || 'Aucune description' }}</td>
+            <td>{{ formatDate(exam.deadline) }}</td>
+            <td>
+              <span class="status-badge" [ngClass]="getStatusClass(exam.status)">
+                {{ getStatusLabel(exam.status) }}
+              </span>
+            </td>
+            <td class="actions-cell">
+              <button (click)="viewExamDetails(exam)" class="btn-action btn-view">
+                <i class="fas fa-eye"></i> Voir
+              </button>
+              <button (click)="downloadExamSubject(exam)" class="btn-action btn-download">
+                <i class="fas fa-download"></i> Télécharger
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- No exams message -->
+    <div *ngIf="!loading && !error && exams.length === 0" class="no-exams-message">
+      <i class="fas fa-info-circle"></i>
+      <p>Aucun examen disponible pour le moment.</p>
+    </div>
+  </div>
+
+  <!-- Exam details modal -->
+  <div *ngIf="selectedExam" class="modal-overlay">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>{{ selectedExam.title }}</h2>
+        <button (click)="closeExamDetails()" class="btn-close">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="exam-details">
+          <div class="detail-item">
+            <span class="detail-label">Description:</span>
+            <span class="detail-value">{{ selectedExam.description || 'Aucune description' }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Date limite:</span>
+            <span class="detail-value">{{ formatDate(selectedExam.deadline) }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Statut:</span>
+            <span class="detail-value status-badge" [ngClass]="getStatusClass(selectedExam.status)">
+              {{ getStatusLabel(selectedExam.status) }}
+            </span>
+          </div>
+        </div>
+
+        <div class="exam-actions">
+          <button (click)="downloadExamSubject(selectedExam)" class="btn-primary">
+            <i class="fas fa-download"></i> Télécharger le sujet
+          </button>
+        </div>
+
+        <div class="submission-section" *ngIf="selectedExam.status === 'published'">
+          <h3>Soumettre votre réponse</h3>
+          
+          <div *ngIf="submissionSuccess" class="success-message">
+            <i class="fas fa-check-circle"></i>
+            <p>Votre réponse a été soumise avec succès!</p>
+            
+            <!-- Affichage de la note automatique -->
+            <div *ngIf="autoGrade" class="grade-result">
+              <h4>Résultat de l'évaluation automatique</h4>
+              <div class="grade-score">
+                <span class="score-label">Note:</span>
+                <span class="score-value">{{ autoGrade.score }}/100</span>
+              </div>
+              <div *ngIf="autoGrade.comment" class="grade-comment">
+                <span class="comment-label">Commentaire:</span>
+                <p class="comment-value">{{ autoGrade.comment }}</p>
+              </div>
+              <div *ngIf="autoGrade.aiJustification" class="grade-justification">
+                <span class="justification-label">Justification:</span>
+                <p class="justification-value">{{ autoGrade.aiJustification }}</p>
+              </div>
+              <p class="grade-notice"><i class="fas fa-info-circle"></i> Cette note est générée automatiquement et peut être révisée par votre enseignant.</p>
+            </div>
+          </div>
+          
+          <div *ngIf="submissionError" class="error-message">
+            <i class="fas fa-exclamation-circle"></i>
+            <p>{{ submissionError }}</p>
+          </div>
+          
+          <div class="file-upload-container">
+            <label for="file-upload" class="file-upload-label">
+              <i class="fas fa-cloud-upload-alt"></i>
+              <span>{{ fileToUpload ? fileToUpload.name : 'Choisir un fichier' }}</span>
+            </label>
+            <input type="file" id="file-upload" (change)="onFileSelected($event)" accept=".pdf,.doc,.docx">
+            
+            <button [disabled]="!fileToUpload || loading" (click)="submitExamResponse()" class="btn-submit">
+              <i class="fas fa-paper-plane"></i> Soumettre
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

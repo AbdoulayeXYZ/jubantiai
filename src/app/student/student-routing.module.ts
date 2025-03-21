@@ -39,7 +39,7 @@ const routes: Routes = [
         component: DeepchatComponent,
       },
       {
-        path: 'manage-students',
+        path: 'manage-exams',
         component: ManageExamsComponent,
       },
     ],
