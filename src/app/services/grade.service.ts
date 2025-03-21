@@ -24,7 +24,12 @@ export class GradeService {
 
   // Get grades for a specific submission
   getGradesBySubmission(submissionId: number): Observable<Grade[]> {
-    return this.http.get<Grade[]>(`${this.apiUrl}/submission/${submissionId}`);
+    return this.http.get<any>(`${this.apiUrl}/submission/${submissionId}`).pipe(
+      map(response => {
+        // Handle both direct array responses and { success: true, data: [...] } format
+        return Array.isArray(response) ? response : (response.data || [])
+      })
+    );
   }
 
   // Get grades for a specific exam

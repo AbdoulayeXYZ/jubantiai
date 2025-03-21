@@ -10,6 +10,7 @@ import examRoutes from './routes/exam.route';
 import submissionRoutes from './routes/submission.route';
 import gradeRoutes from './routes/grade.route';
 import authRoutes from './routes/auth.routes';
+import chatRoutes from './routes/chat.routes';
 
 // Configuration de l'environnement
 dotenv.config();
@@ -48,6 +49,7 @@ const startServer = async () => {
     app.use('/api/exams', submissionRoutes);
     app.use('/api/grades', gradeRoutes);
     app.use('/api/auth', authRoutes);
+    app.use('/api/chat', chatRoutes);
 
     // Then start Express server
     app.listen(PORT, () => {

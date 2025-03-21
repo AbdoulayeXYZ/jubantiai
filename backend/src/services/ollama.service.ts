@@ -99,7 +99,7 @@ export class OllamaService {
         }
     };
 
-    private async generateSimpleCompletion(prompt: string, customTimeout?: number): Promise<string> {
+    public async generateSimpleCompletion(prompt: string, customTimeout?: number): Promise<string> {
         let lastError: Error | null = null;
         
         for (let attempt = 0; attempt < this.retryCount; attempt++) {

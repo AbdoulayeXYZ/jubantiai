@@ -5,6 +5,7 @@ import { Exam } from '../entities/exam.entity';
 import { Submission } from '../entities/submission.entity';
 import { Grade } from '../entities/grade.entity';
 import { PlagiarismReport } from '../entities/plagiarism-report.entity';
+import { ChatHistory } from '../entities/chat.entity';
 
 dotenv.config();
 
@@ -32,7 +33,8 @@ export const AppDataSource = new DataSource({
         Exam,
         Submission,
         Grade,
-        PlagiarismReport
+        PlagiarismReport,
+        ChatHistory
     ],
     migrations: [],
     subscribers: []
