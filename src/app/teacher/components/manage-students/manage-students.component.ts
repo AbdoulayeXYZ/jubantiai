@@ -18,6 +18,7 @@ import { CommonModule } from '@angular/common';
 export class ManageStudentsComponent implements OnInit {
   // Properties for student management
   students: User[] = [];
+  filteredStudents: User[] = []; // New property to store filtered/sorted students
   studentForm!: FormGroup;
   showForm = false;
   isEditMode = false;
@@ -29,7 +30,7 @@ export class ManageStudentsComponent implements OnInit {
   
   // Pagination properties
   currentPage = 1;
-  pageSize = 10;
+  pageSize = 25; // Changed from 10 to 25
   totalPages = 1;
   totalStudents = 0;
 
@@ -47,6 +48,8 @@ export class ManageStudentsComponent implements OnInit {
   initForm(): void {
     this.studentForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
+      firstName: ['', [Validators.required]],
+      lastName: ['', [Validators.required]],
       password: ['', [Validators.required, Validators.minLength(6)]]
     });
   }
@@ -58,8 +61,15 @@ export class ManageStudentsComponent implements OnInit {
       next: (users) => {
         // Filter only student users
         this.students = users.filter(user => user.role === 'student');
+        
+        // Sort students by lastName
+        this.students.sort((a, b) => {
+          return a.lastName.localeCompare(b.lastName);
+        });
+        
         this.totalStudents = this.students.length;
         this.totalPages = Math.ceil(this.totalStudents / this.pageSize);
+        this.applyPagination(); // Apply pagination to get current page students
         this.isLoading = false;
       },
       error: (error) => {
@@ -68,6 +78,18 @@ export class ManageStudentsComponent implements OnInit {
         console.error('Error loading students:', error);
       }
     });
+  }
+
+  // Apply pagination to get current page students
+  applyPagination(): void {
+    const startIndex = (this.currentPage - 1) * this.pageSize;
+    const endIndex = Math.min(startIndex + this.pageSize, this.totalStudents);
+    this.filteredStudents = this.students.slice(startIndex, endIndex);
+  }
+
+  // Get sequential index for display
+  getSequentialIndex(index: number): number {
+    return (this.currentPage - 1) * this.pageSize + index + 1;
   }
 
   // Show add student form
@@ -115,7 +137,9 @@ export class ManageStudentsComponent implements OnInit {
     
     // Set form values
     this.studentForm.patchValue({
-      email: student.email
+      email: student.email,
+      firstName: student.firstName,
+      lastName: student.lastName
     });
   }
 
@@ -158,6 +182,8 @@ export class ManageStudentsComponent implements OnInit {
       const updatedStudent: User = {
         ...this.selectedStudent,
         email: this.studentForm.value.email,
+        firstName: this.studentForm.value.firstName,
+        lastName: this.studentForm.value.lastName,
         password: this.studentForm.value.password || 'tempPassword123', // Provide a default password
         role: 'student', // Ensure role is included with correct type
         type: 'user' // Ensure type field is included
@@ -185,6 +211,8 @@ export class ManageStudentsComponent implements OnInit {
       // Add new student
       const newStudent: User = {
         email: this.studentForm.value.email,
+        firstName: this.studentForm.value.firstName,
+        lastName: this.studentForm.value.lastName,
         password: this.studentForm.value.password,
         role: 'student',
         type: 'user', // Required by the backend
@@ -215,6 +243,7 @@ export class ManageStudentsComponent implements OnInit {
   changePage(page: number): void {
     if (page >= 1 && page <= this.totalPages) {
       this.currentPage = page;
+      this.applyPagination(); // Re-apply pagination when page changes
     }
   }
 

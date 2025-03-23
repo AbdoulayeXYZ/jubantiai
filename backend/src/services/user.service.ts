@@ -10,6 +10,8 @@ const userRepository = AppDataSource.getRepository(User);
 interface ICreateUserDto {
     email: string;
     password: string;
+    firstName: string;
+    lastName: string;
     role: 'student' | 'teacher';
 }
 
@@ -54,8 +56,8 @@ export class UserService {
 }
 
 // Service d'enregistrement de l'utilisateur
-export const registerUser = async (userData: { email: string; password: string; role: string; }) => {
-    const { email, password, role } = userData;
+export const registerUser = async (userData: { email: string; password: string; firstName: string; lastName: string; role: string; }) => {
+    const { email, password, firstName, lastName, role } = userData;
 
     // Vérification si l'utilisateur existe déjà
     const existingUser = await userRepository.findOne({ where: { email } });
@@ -68,6 +70,8 @@ export const registerUser = async (userData: { email: string; password: string; 
     const newUser = userRepository.create({
         email,
         password: hashedPassword,
+        firstName,
+        lastName,
         role: role as 'teacher' | 'student',
     });
 
@@ -99,7 +103,7 @@ export const authenticateUser = async (email: string, password: string) => {
 // Service pour récupérer tous les utilisateurs
 export const getAllUsers = async () => {
     const users = await userRepository.find({
-        select: ["id", "email", "role", "createdAt", "updatedAt"] // Exclure le password
+        select: ["id", "email", "firstName", "lastName", "role", "createdAt", "updatedAt"] // Exclure le password
     });
     return users;
 };

@@ -26,7 +26,7 @@
       </div>
       <div class="card-body">
         <form [formGroup]="examForm" (ngSubmit)="isEditing ? updateExam() : submitExam()">
-          <div class="form-group">
+          <div class="form-group" *ngIf="!isEditing">
             <label for="title">Title*</label>
             <input type="text" id="title" formControlName="title" class="form-control" placeholder="Enter exam title">
             <div class="error-message" *ngIf="examForm.get('title')?.invalid && examForm.get('title')?.touched">
@@ -34,7 +34,7 @@
             </div>
           </div>
 
-          <div class="form-group">
+          <div class="form-group" *ngIf="!isEditing">
             <label for="description">Description</label>
             <textarea id="description" formControlName="description" class="form-control" placeholder="Enter exam description" rows="3"></textarea>
           </div>
@@ -48,7 +48,7 @@
             </select>
           </div>
 
-          <div class="form-group">
+          <div class="form-group"  *ngIf="!isEditing">
             <label for="deadline">Deadline</label>
             <input type="datetime-local" id="deadline" formControlName="deadline" class="form-control">
           </div>

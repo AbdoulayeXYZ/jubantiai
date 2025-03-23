@@ -17,9 +17,13 @@ export class UserService {
     const userData = {
       email: user.email,
       password: user.password,
+      firstName: user.firstName,
+      lastName: user.lastName,
       role: user.role || 'student',
       type: user.type || 'user' // Include type field which might be required
     };
+    // Log the data being sent to help debug
+    console.log('Adding user with data:', userData);
     return this.http.post<User>(`${this.apiUrl}/register`, userData);
   }
 
@@ -32,15 +36,18 @@ export class UserService {
   }
 
   updateUser(id: string, user: User): Observable<User> {
-    // Use the register endpoint since there's no specific update endpoint
-    // This will create a new user if it doesn't exist or update if it exists
+    // Use the dedicated update endpoint
     const userData = {
       email: user.email,
       password: user.password || 'tempPassword123', // Provide a default password if none is given
+      firstName: user.firstName,
+      lastName: user.lastName,
       role: user.role || 'student',
       type: user.type || 'user'
     };
-    return this.http.post<User>(`${this.apiUrl}/register`, userData);
+    // Log the data being sent to help debug
+    console.log('Updating user with data:', userData);
+    return this.http.put<User>(`${this.apiUrl}/update/${id}`, userData);
   }
 
   deleteUser(userId: string | undefined): Observable<any> {

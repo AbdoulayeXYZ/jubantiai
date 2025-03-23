@@ -32,6 +32,8 @@ export class AuthController {
             const user = await this.userService.create({
                 email,
                 password: hashedPassword,
+                firstName,
+                lastName,
                 role
             });
 
@@ -49,6 +51,8 @@ export class AuthController {
                     user: {
                         id: user.id,
                         email: user.email,
+                        firstName: user.firstName,
+                        lastName: user.lastName,
                         role: user.role
                     },
                     token
@@ -101,6 +105,8 @@ export class AuthController {
                     user: {
                         id: user.id,
                         email: user.email,
+                        firstName: user.firstName,
+                        lastName: user.lastName,
                         role: user.role
                     },
                     token
@@ -114,4 +120,4 @@ export class AuthController {
             });
         }
     };
-} 
+}
