@@ -41,6 +41,7 @@ export interface ICreateSubmissionDto {
 export interface IUpdateSubmissionDto {
     status?: 'pending' | 'submitted' | 'graded';
     feedback?: string;
+    filePath?: string;
 }
 
 export interface ISubmissionStats {
